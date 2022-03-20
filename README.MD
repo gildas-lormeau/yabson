@@ -36,5 +36,5 @@ let result;
 for (const chunk of serializer) {
   result = parser.next(chunk); // chunk is a Uint8array of binary encoded data
 }
-console.log(result.value); // displays a deep copy of object
+console.log(result.value); // displays a deep clone of object
 ```
