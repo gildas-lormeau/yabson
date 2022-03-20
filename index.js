@@ -7,43 +7,43 @@ const textDecoder = new TextDecoder();
 const types = new Array(256);
 let typeIndex = 0;
 
-registerType({ parse: parseObject, serialize: serializeObject, test: testObject });
-registerType({ parse: parseArray, serialize: serializeArray, test: testArray });
-registerType({ parse: parseString, serialize: serializeString, test: testString });
-registerType({ parse: parseBigUint64Array, serialize: serializeBigUint64Array, test: testBigUint64Array });
-registerType({ parse: parseBigInt64Array, serialize: serializeBigInt64Array, test: testBigInt64Array });
-registerType({ parse: parseFloat64Array, serialize: serializeFloat64Array, test: testFloat64Array });
-registerType({ parse: parseFloat32Array, serialize: serializeFloat32Array, test: testFloat32Array });
-registerType({ parse: parseUint32Array, serialize: serializeUint32Array, test: testUint32Array });
-registerType({ parse: parseInt32Array, serialize: serializeInt32Array, test: testInt32Array });
-registerType({ parse: parseUint16Array, serialize: serializeUint16Array, test: testUint16Array });
-registerType({ parse: parseInt16Array, serialize: serializeInt16Array, test: testInt16Array });
-registerType({ parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, test: testUint8ClampedArray });
-registerType({ parse: parseUint8Array, serialize: serializeUint8Array, test: testUint8Array });
-registerType({ parse: parseInt8Array, serialize: serializeInt8Array, test: testInt8Array });
-registerType({ parse: parseNumber, serialize: serializeNumber, test: testNumber });
-registerType({ parse: parseBigInt, serialize: serializeBigInt, test: testBigInt });
-registerType({ parse: parseUint32, serialize: serializeUint32, test: testUint32 });
-registerType({ parse: parseInt32, serialize: serializeInt32, test: testInt32 });
-registerType({ parse: parseUint16, serialize: serializeUint16, test: testUint16 });
-registerType({ parse: parseInt16, serialize: serializeInt16, test: testInt16 });
-registerType({ parse: parseUint8, serialize: serializeUint8, test: testUint8 });
-registerType({ parse: parseInt8, serialize: serializeInt8, test: testInt8 });
-registerType({ parse: parseUndefinedValue, test: testUndefinedValue });
-registerType({ parse: parseNullValue, test: testNullValue });
-registerType({ parse: parseNaNValue, test: testNaNValue });
-registerType({ parse: parseBoolean, serialize: serializeBoolean, test: testBoolean });
-registerType({ parse: parseMap, serialize: serializeMap, test: testMap });
-registerType({ parse: parseSet, serialize: serializeSet, test: testSet });
-registerType({ parse: parseDate, serialize: serializeDate, test: testDate });
-registerType({ parse: parseError, serialize: serializeError, test: testError });
-registerType({ parse: parseRegExp, serialize: serializeRegExp, test: testRegExp });
+registerType(serializeObject, parseObject, testObject);
+registerType(serializeArray, parseArray, testArray);
+registerType(serializeString, parseString, testString);
+registerType(serializeBigUint64Array, parseBigUint64Array, testBigUint64Array);
+registerType(serializeBigInt64Array, parseBigInt64Array, testBigInt64Array);
+registerType(serializeFloat64Array, parseFloat64Array, testFloat64Array);
+registerType(serializeFloat32Array, parseFloat32Array, testFloat32Array);
+registerType(serializeUint32Array, parseUint32Array, testUint32Array);
+registerType(serializeInt32Array, parseInt32Array, testInt32Array);
+registerType(serializeUint16Array, parseUint16Array, testUint16Array);
+registerType(serializeInt16Array, parseInt16Array, testInt16Array);
+registerType(serializeUint8ClampedArray, parseUint8ClampedArray, testUint8ClampedArray);
+registerType(serializeUint8Array, parseUint8Array, testUint8Array);
+registerType(serializeInt8Array, parseInt8Array, testInt8Array);
+registerType(serializeNumber, parseNumber, testNumber);
+registerType(serializeBigInt, parseBigInt, testBigInt);
+registerType(serializeUint32, parseUint32, testUint32);
+registerType(serializeInt32, parseInt32, testInt32);
+registerType(serializeUint16, parseUint16, testUint16);
+registerType(serializeInt16, parseInt16, testInt16);
+registerType(serializeUint8, parseUint8, testUint8);
+registerType(serializeInt8, parseInt8, testInt8);
+registerType(null, parseUndefinedValue, testUndefinedValue);
+registerType(null, parseNullValue, testNullValue);
+registerType(null, parseNaNValue, testNaNValue);
+registerType(serializeBoolean, parseBoolean, testBoolean);
+registerType(serializeMap, parseMap, testMap);
+registerType(serializeSet, parseSet, testSet);
+registerType(serializeDate, parseDate, testDate);
+registerType(serializeError, parseError, testError);
+registerType(serializeRegExp, parseRegExp, testRegExp);
 
 export { getSerializer, getParser, registerType };
 
-function registerType(functions) {
+function registerType(serialize, parse, test) {
 	typeIndex++;
-	types[types.length - typeIndex] = functions;
+	types[types.length - typeIndex] = { serialize, parse, test };
 }
 
 class WriteStream {
