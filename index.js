@@ -10,17 +10,17 @@ let typeIndex = 0;
 registerType(serializeObject, parseObject, testObject);
 registerType(serializeArray, parseArray, testArray);
 registerType(serializeString, parseString, testString);
-registerType(serializeBigUint64Array, parseBigUint64Array, testBigUint64Array);
-registerType(serializeBigInt64Array, parseBigInt64Array, testBigInt64Array);
-registerType(serializeFloat64Array, parseFloat64Array, testFloat64Array);
-registerType(serializeFloat32Array, parseFloat32Array, testFloat32Array);
-registerType(serializeUint32Array, parseUint32Array, testUint32Array);
-registerType(serializeInt32Array, parseInt32Array, testInt32Array);
-registerType(serializeUint16Array, parseUint16Array, testUint16Array);
-registerType(serializeInt16Array, parseInt16Array, testInt16Array);
-registerType(serializeUint8ClampedArray, parseUint8ClampedArray, testUint8ClampedArray);
-registerType(serializeUint8Array, parseUint8Array, testUint8Array);
-registerType(serializeInt8Array, parseInt8Array, testInt8Array);
+registerType(serializeTypedArray, parseBigUint64Array, testBigUint64Array);
+registerType(serializeTypedArray, parseBigInt64Array, testBigInt64Array);
+registerType(serializeTypedArray, parseFloat64Array, testFloat64Array);
+registerType(serializeTypedArray, parseFloat32Array, testFloat32Array);
+registerType(serializeTypedArray, parseUint32Array, testUint32Array);
+registerType(serializeTypedArray, parseInt32Array, testInt32Array);
+registerType(serializeTypedArray, parseUint16Array, testUint16Array);
+registerType(serializeTypedArray, parseInt16Array, testInt16Array);
+registerType(serializeTypedArray, parseUint8ClampedArray, testUint8ClampedArray);
+registerType(serializeTypedArray, parseUint8Array, testUint8Array);
+registerType(serializeTypedArray, parseInt8Array, testInt8Array);
 registerType(serializeNumber, parseNumber, testNumber);
 registerType(serializeBigInt, parseBigInt, testBigInt);
 registerType(serializeUint32, parseUint32, testUint32);
@@ -47,17 +47,7 @@ export {
 	serializeObject,
 	serializeArray,
 	serializeString,
-	serializeBigUint64Array,
-	serializeBigInt64Array,
-	serializeFloat64Array,
-	serializeFloat32Array,
-	serializeUint32Array,
-	serializeInt32Array,
-	serializeUint16Array,
-	serializeInt16Array,
-	serializeUint8ClampedArray,
-	serializeUint8Array,
-	serializeInt8Array,
+	serializeTypedArray,
 	serializeNumber,
 	serializeBigInt,
 	serializeUint32,
@@ -207,57 +197,7 @@ function* serializeString(data, string) {
 	yield* data.append(encodedString);
 }
 
-function* serializeBigUint64Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeBigInt64Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeFloat64Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeFloat32Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeUint32Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeInt32Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeUint16Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeInt16Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeUint8ClampedArray(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8Array(array.buffer));
-}
-
-function* serializeUint8Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(array);
-}
-
-function* serializeInt8Array(data, array) {
+function* serializeTypedArray(data, array) {
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Uint8Array(array.buffer));
 }
