@@ -39,7 +39,103 @@ registerType(serializeDate, parseDate, testDate);
 registerType(serializeError, parseError, testError);
 registerType(serializeRegExp, parseRegExp, testRegExp);
 
-export { getSerializer, getParser, registerType };
+export {
+	getSerializer,
+	getParser,
+	registerType,
+	serializeValue,
+	serializeObject,
+	serializeArray,
+	serializeString,
+	serializeBigUint64Array,
+	serializeBigInt64Array,
+	serializeFloat64Array,
+	serializeFloat32Array,
+	serializeUint32Array,
+	serializeInt32Array,
+	serializeUint16Array,
+	serializeInt16Array,
+	serializeUint8ClampedArray,
+	serializeUint8Array,
+	serializeInt8Array,
+	serializeNumber,
+	serializeBigInt,
+	serializeUint32,
+	serializeInt32,
+	serializeUint16,
+	serializeInt16,
+	serializeUint8,
+	serializeInt8,
+	serializeBoolean,
+	serializeMap,
+	serializeSet,
+	serializeDate,
+	serializeError,
+	serializeRegExp,
+	parseValue,
+	parseObject,
+	parseArray,
+	parseString,
+	parseBigUint64Array,
+	parseBigInt64Array,
+	parseFloat64Array,
+	parseFloat32Array,
+	parseUint32Array,
+	parseInt32Array,
+	parseUint16Array,
+	parseInt16Array,
+	parseUint8ClampedArray,
+	parseUint8Array,
+	parseInt8Array,
+	parseNumber,
+	parseBigInt,
+	parseUint32,
+	parseInt32,
+	parseUint16,
+	parseInt16,
+	parseUint8,
+	parseInt8,
+	parseUndefinedValue,
+	parseNullValue,
+	parseNaNValue,
+	parseBoolean,
+	parseMap,
+	parseSet,
+	parseDate,
+	parseError,
+	parseRegExp,
+	testObject,
+	testArray,
+	testString,
+	testBigUint64Array,
+	testBigInt64Array,
+	testFloat64Array,
+	testFloat32Array,
+	testUint32Array,
+	testInt32Array,
+	testUint16Array,
+	testInt16Array,
+	testUint8ClampedArray,
+	testUint8Array,
+	testInt8Array,
+	testNumber,
+	testBigInt,
+	testUint32,
+	testInt32,
+	testUint16,
+	testInt16,
+	testUint8,
+	testInt8,
+	testUndefinedValue,
+	testNullValue,
+	testNaNValue,
+	testBoolean,
+	testMap,
+	testSet,
+	testDate,
+	testError,
+	testRegExp
+};
 
 function registerType(serialize, parse, test) {
 	typeIndex++;
@@ -88,57 +184,6 @@ function* serializeValue(data, value) {
 	}
 }
 
-function* serializeBoolean(data, boolean) {
-	const serializedBoolean = new Uint8Array([Number(boolean)]);
-	yield* data.append(serializedBoolean);
-}
-
-function* serializeNumber(data, number) {
-	const serializedNumber = new Uint8Array(new Float64Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeInt8(data, number) {
-	const serializedNumber = new Uint8Array(new Int8Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeUint8(data, number) {
-	const serializedNumber = new Uint8Array([number]);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeInt16(data, number) {
-	const serializedNumber = new Uint8Array(new Int16Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeUint16(data, number) {
-	const serializedNumber = new Uint8Array(new Uint16Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeInt32(data, number) {
-	const serializedNumber = new Uint8Array(new Int32Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeUint32(data, number) {
-	const serializedNumber = new Uint8Array(new Uint32Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeBigInt(data, number) {
-	const serializedNumber = new Uint8Array(new BigInt64Array([number]).buffer);
-	yield* data.append(serializedNumber);
-}
-
-function* serializeString(data, string) {
-	const encodedString = textEncoder.encode(string);
-	yield* serializeValue(data, encodedString.length);
-	yield* data.append(encodedString);
-}
-
 function* serializeObject(data, object) {
 	const entries = Object.entries(object);
 	yield* serializeValue(data, entries.length);
@@ -155,6 +200,57 @@ function* serializeArray(data, array) {
 	}
 }
 
+function* serializeString(data, string) {
+	const encodedString = textEncoder.encode(string);
+	yield* serializeValue(data, encodedString.length);
+	yield* data.append(encodedString);
+}
+
+function* serializeBigUint64Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new BigUint64Array(array.buffer));
+}
+
+function* serializeBigInt64Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new BigInt64Array(array.buffer));
+}
+
+function* serializeFloat64Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Float64Array(array.buffer));
+}
+
+function* serializeFloat32Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Float32Array(array.buffer));
+}
+
+function* serializeUint32Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Uint32Array(array.buffer));
+}
+
+function* serializeInt32Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Int32Array(array.buffer));
+}
+
+function* serializeUint16Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Uint16Array(array.buffer));
+}
+
+function* serializeInt16Array(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Int16Array(array.buffer));
+}
+
+function* serializeUint8ClampedArray(data, array) {
+	yield* serializeValue(data, array.length);
+	yield* data.append(new Uint8ClampedArray(array.buffer));
+}
+
 function* serializeUint8Array(data, array) {
 	yield* serializeValue(data, array.length);
 	yield* data.append(array);
@@ -165,49 +261,49 @@ function* serializeInt8Array(data, array) {
 	yield* data.append(new Uint8Array(array.buffer));
 }
 
-function* serializeUint8ClampedArray(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8ClampedArray(array.buffer));
+function* serializeNumber(data, number) {
+	const serializedNumber = new Uint8Array(new Float64Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeInt16Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Int16Array(array.buffer));
+function* serializeBigInt(data, number) {
+	const serializedNumber = new Uint8Array(new BigInt64Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeUint16Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint16Array(array.buffer));
+function* serializeUint32(data, number) {
+	const serializedNumber = new Uint8Array(new Uint32Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeInt32Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Int32Array(array.buffer));
+function* serializeInt32(data, number) {
+	const serializedNumber = new Uint8Array(new Int32Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeUint32Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint32Array(array.buffer));
+function* serializeUint16(data, number) {
+	const serializedNumber = new Uint8Array(new Uint16Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeFloat32Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Float32Array(array.buffer));
+function* serializeInt16(data, number) {
+	const serializedNumber = new Uint8Array(new Int16Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeFloat64Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new Float64Array(array.buffer));
+function* serializeUint8(data, number) {
+	const serializedNumber = new Uint8Array([number]);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeBigInt64Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new BigInt64Array(array.buffer));
+function* serializeInt8(data, number) {
+	const serializedNumber = new Uint8Array(new Int8Array([number]).buffer);
+	yield* data.append(serializedNumber);
 }
 
-function* serializeBigUint64Array(data, array) {
-	yield* serializeValue(data, array.length);
-	yield* data.append(new BigUint64Array(array.buffer));
+function* serializeBoolean(data, boolean) {
+	const serializedBoolean = new Uint8Array([Number(boolean)]);
+	yield* data.append(serializedBoolean);
 }
 
 function* serializeMap(data, map) {
@@ -283,72 +379,6 @@ function* parseValue(data) {
 	return result;
 }
 
-function* parseBoolean(data) {
-	const array = yield* data.consume(1);
-	return Boolean(array[0]);
-}
-
-function* parseNumber(data) {
-	const array = yield* data.consume(8);
-	return new Float64Array(array.buffer)[0];
-}
-
-function* parseInt8(data) {
-	const array = yield* data.consume(1);
-	return new Int8Array(array.buffer)[0];
-}
-
-function* parseUint8(data) {
-	const array = yield* data.consume(1);
-	return new Uint8Array(array.buffer)[0];
-}
-
-function* parseInt16(data) {
-	const array = yield* data.consume(2);
-	return new Int16Array(array.buffer)[0];
-}
-
-function* parseUint16(data) {
-	const array = yield* data.consume(2);
-	return new Uint16Array(array.buffer)[0];
-}
-
-function* parseInt32(data) {
-	const array = yield* data.consume(4);
-	return new Int32Array(array.buffer)[0];
-}
-
-function* parseUint32(data) {
-	const array = yield* data.consume(4);
-	return new Uint32Array(array.buffer)[0];
-}
-
-function* parseBigInt(data) {
-	const array = yield* data.consume(8);
-	return new BigInt64Array(array.buffer)[0];
-}
-
-function* parseString(data) {
-	const size = yield* parseValue(data);
-	const array = yield* data.consume(size);
-	return textDecoder.decode(array);
-}
-
-// eslint-disable-next-line require-yield
-function* parseUndefinedValue() {
-	return undefined;
-}
-
-// eslint-disable-next-line require-yield
-function* parseNaNValue() {
-	return NaN;
-}
-
-// eslint-disable-next-line require-yield
-function* parseNullValue() {
-	return null;
-}
-
 function* parseObject(data) {
 	const size = yield* parseValue(data);
 	const object = {};
@@ -369,6 +399,66 @@ function* parseArray(data) {
 	return array;
 }
 
+function* parseString(data) {
+	const size = yield* parseValue(data);
+	const array = yield* data.consume(size);
+	return textDecoder.decode(array);
+}
+
+function* parseBigUint64Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 8);
+	return new BigUint64Array(array.buffer);
+}
+
+function* parseBigInt64Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 8);
+	return new BigInt64Array(array.buffer);
+}
+
+function* parseFloat64Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 8);
+	return new Float64Array(array.buffer);
+}
+
+function* parseFloat32Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 4);
+	return new Float32Array(array.buffer);
+}
+
+function* parseUint32Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 4);
+	return new Uint32Array(array.buffer);
+}
+
+function* parseInt32Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 4);
+	return new Int32Array(array.buffer);
+}
+
+function* parseUint16Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 2);
+	return new Uint16Array(array.buffer);
+}
+
+function* parseInt16Array(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length * 2);
+	return new Int16Array(array.buffer);
+}
+
+function* parseUint8ClampedArray(data) {
+	const length = yield* parseValue(data);
+	const array = yield* data.consume(length);
+	return new Uint8ClampedArray(array.buffer);
+}
+
 function* parseUint8Array(data) {
 	const length = yield* parseValue(data);
 	const array = yield* data.consume(length);
@@ -381,58 +471,64 @@ function* parseInt8Array(data) {
 	return new Int8Array(array.buffer);
 }
 
-function* parseUint8ClampedArray(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length);
-	return new Uint8ClampedArray(array.buffer);
+function* parseNumber(data) {
+	const array = yield* data.consume(8);
+	return new Float64Array(array.buffer)[0];
 }
 
-function* parseInt16Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 2);
-	return new Int16Array(array.buffer);
+function* parseBigInt(data) {
+	const array = yield* data.consume(8);
+	return new BigInt64Array(array.buffer)[0];
 }
 
-function* parseUint16Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 2);
-	return new Uint16Array(array.buffer);
+function* parseUint32(data) {
+	const array = yield* data.consume(4);
+	return new Uint32Array(array.buffer)[0];
 }
 
-function* parseInt32Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 4);
-	return new Int32Array(array.buffer);
+function* parseInt32(data) {
+	const array = yield* data.consume(4);
+	return new Int32Array(array.buffer)[0];
 }
 
-function* parseUint32Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 4);
-	return new Uint32Array(array.buffer);
+function* parseUint16(data) {
+	const array = yield* data.consume(2);
+	return new Uint16Array(array.buffer)[0];
 }
 
-function* parseFloat32Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 4);
-	return new Float32Array(array.buffer);
+function* parseInt16(data) {
+	const array = yield* data.consume(2);
+	return new Int16Array(array.buffer)[0];
 }
 
-function* parseFloat64Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 8);
-	return new Float64Array(array.buffer);
+function* parseUint8(data) {
+	const array = yield* data.consume(1);
+	return new Uint8Array(array.buffer)[0];
 }
 
-function* parseBigInt64Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 8);
-	return new BigInt64Array(array.buffer);
+function* parseInt8(data) {
+	const array = yield* data.consume(1);
+	return new Int8Array(array.buffer)[0];
 }
 
-function* parseBigUint64Array(data) {
-	const length = yield* parseValue(data);
-	const array = yield* data.consume(length * 8);
-	return new BigUint64Array(array.buffer);
+// eslint-disable-next-line require-yield
+function* parseUndefinedValue() {
+	return undefined;
+}
+
+// eslint-disable-next-line require-yield
+function* parseNullValue() {
+	return null;
+}
+
+// eslint-disable-next-line require-yield
+function* parseNaNValue() {
+	return NaN;
+}
+
+function* parseBoolean(data) {
+	const array = yield* data.consume(1);
+	return Boolean(array[0]);
 }
 
 function* parseMap(data) {
@@ -477,6 +573,97 @@ function* parseRegExp(data) {
 	return new RegExp(source, flags);
 }
 
+function testObject(value) {
+	return value === Object(value);
+}
+
+function testArray(value) {
+	return typeof value.length == "number";
+}
+
+function testString(value) {
+	return typeof value == "string";
+}
+
+function testBigUint64Array(value) {
+	return value instanceof BigUint64Array;
+}
+
+function testBigInt64Array(value) {
+	return value instanceof BigInt64Array;
+}
+
+function testFloat64Array(value) {
+	return value instanceof Float64Array;
+}
+
+function testUint32Array(value) {
+	return value instanceof Uint32Array;
+}
+
+function testInt32Array(value) {
+	return value instanceof Int32Array;
+}
+
+function testUint16Array(value) {
+	return value instanceof Uint16Array;
+}
+
+function testFloat32Array(value) {
+	return value instanceof Float32Array;
+}
+
+function testInt16Array(value) {
+	return value instanceof Int16Array;
+}
+
+function testUint8ClampedArray(value) {
+	return value instanceof Uint8ClampedArray;
+}
+
+function testUint8Array(value) {
+	return value instanceof Uint8Array;
+}
+
+function testInt8Array(value) {
+	return value instanceof Int8Array;
+}
+
+function testNumber(value) {
+	return typeof value == "number";
+}
+function testBigInt(value) {
+	return typeof value == "bigint";
+}
+
+function testUint32(value) {
+	return testInteger(value) && value >= 0 && value <= 4294967295;
+}
+
+function testInt32(value) {
+	return testInteger(value) && value >= -2147483648 && value <= 2147483647;
+}
+
+function testUint16(value) {
+	return testInteger(value) && value >= 0 && value <= 65535;
+}
+
+function testInt16(value) {
+	return testInteger(value) && value >= -32768 && value <= 32767;
+}
+
+function testUint8(value) {
+	return testInteger(value) && value >= 0 && value <= 255;
+}
+
+function testInt8(value) {
+	return testInteger(value) && value >= -128 && value <= 127;
+}
+
+function testInteger(value) {
+	return testNumber(value) && value == Number.parseInt(value, 10);
+}
+
 function testUndefinedValue(value) {
 	return value === undefined;
 }
@@ -489,99 +676,8 @@ function testNaNValue(value) {
 	return Number.isNaN(value);
 }
 
-function testString(value) {
-	return typeof value == "string";
-}
-
-function testArray(value) {
-	return typeof value.length == "number";
-}
-
-function testObject(value) {
-	return value === Object(value);
-}
-
-function testInt8(value) {
-	return testInteger(value) && value >= -128 && value <= 127;
-}
-
-function testUint8(value) {
-	return testInteger(value) && value >= 0 && value <= 255;
-}
-
-function testInt16(value) {
-	return testInteger(value) && value >= -32768 && value <= 32767;
-}
-
-function testUint16(value) {
-	return testInteger(value) && value >= 0 && value <= 65535;
-}
-
-function testInt32(value) {
-	return testInteger(value) && value >= -2147483648 && value <= 2147483647;
-}
-
-function testUint32(value) {
-	return testInteger(value) && value >= 0 && value <= 4294967295;
-}
-
-function testInteger(value) {
-	return testNumber(value) && value == Number.parseInt(value, 10);
-}
-
-function testNumber(value) {
-	return typeof value == "number";
-}
-function testBigInt(value) {
-	return typeof value == "bigint";
-}
-
 function testBoolean(value) {
 	return typeof value == "boolean";
-}
-
-function testUint8Array(value) {
-	return value instanceof Uint8Array;
-}
-
-function testInt8Array(value) {
-	return value instanceof Int8Array;
-}
-
-function testUint8ClampedArray(value) {
-	return value instanceof Uint8ClampedArray;
-}
-
-function testInt16Array(value) {
-	return value instanceof Int16Array;
-}
-
-function testUint16Array(value) {
-	return value instanceof Uint16Array;
-}
-
-function testInt32Array(value) {
-	return value instanceof Int32Array;
-}
-
-function testUint32Array(value) {
-	return value instanceof Uint32Array;
-}
-
-function testFloat32Array(value) {
-	return value instanceof Float32Array;
-}
-
-function testFloat64Array(value) {
-	return value instanceof Float64Array;
-}
-
-function testBigInt64Array(value) {
-	return value instanceof BigInt64Array;
-}
-
-function testBigUint64Array(value) {
-	return value instanceof BigUint64Array;
 }
 
 function testMap(value) {
