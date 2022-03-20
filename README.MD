@@ -29,7 +29,7 @@ const object = {
   set: new Set([1, 2, 3]),
 };
 
-// chunkSize (optional) is the max. size in bytes of chunks if the for loop
+// chunkSize (optional) is the max. size in bytes of chunks in the for loop below
 const serializer = getSerializer(object, { chunkSize: 16 });
 const parser = getParser();
 
