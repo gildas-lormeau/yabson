@@ -29,9 +29,9 @@ registerType(serializeUint16, parseUint16, testUint16);
 registerType(serializeInt16, parseInt16, testInt16);
 registerType(serializeUint8, parseUint8, testUint8);
 registerType(serializeInt8, parseInt8, testInt8);
-registerType(null, parseUndefinedValue, testUndefinedValue);
-registerType(null, parseNullValue, testNullValue);
-registerType(null, parseNaNValue, testNaNValue);
+registerType(null, parseUndefined, testUndefined);
+registerType(null, parseNull, testNull);
+registerType(null, parseNaN, testNaN);
 registerType(serializeBoolean, parseBoolean, testBoolean);
 registerType(serializeMap, parseMap, testMap);
 registerType(serializeSet, parseSet, testSet);
@@ -95,9 +95,9 @@ export {
 	parseInt16,
 	parseUint8,
 	parseInt8,
-	parseUndefinedValue,
-	parseNullValue,
-	parseNaNValue,
+	parseUndefined as parseUndefinedValue,
+	parseNull as parseNullValue,
+	parseNaN as parseNaNValue,
 	parseBoolean,
 	parseMap,
 	parseSet,
@@ -127,9 +127,9 @@ export {
 	testUint8,
 	testInt8,
 	testInteger,
-	testUndefinedValue,
-	testNullValue,
-	testNaNValue,
+	testUndefined as testUndefinedValue,
+	testNull as testNullValue,
+	testNaN as testNaNValue,
 	testBoolean,
 	testMap,
 	testSet,
@@ -513,17 +513,17 @@ function* parseInt8(data) {
 }
 
 // eslint-disable-next-line require-yield
-function* parseUndefinedValue() {
+function* parseUndefined() {
 	return undefined;
 }
 
 // eslint-disable-next-line require-yield
-function* parseNullValue() {
+function* parseNull() {
 	return null;
 }
 
 // eslint-disable-next-line require-yield
-function* parseNaNValue() {
+function* parseNaN() {
 	return NaN;
 }
 
@@ -665,15 +665,15 @@ function testInteger(value) {
 	return testNumber(value) && value == Number.parseInt(value, 10);
 }
 
-function testUndefinedValue(value) {
+function testUndefined(value) {
 	return value === undefined;
 }
 
-function testNullValue(value) {
+function testNull(value) {
 	return value === null;
 }
 
-function testNaNValue(value) {
+function testNaN(value) {
 	return Number.isNaN(value);
 }
 
