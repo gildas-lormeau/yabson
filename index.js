@@ -209,47 +209,47 @@ function* serializeString(data, string) {
 
 function* serializeBigUint64Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new BigUint64Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeBigInt64Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new BigInt64Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeFloat64Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Float64Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeFloat32Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Float32Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeUint32Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint32Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeInt32Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Int32Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeUint16Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint16Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeInt16Array(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Int16Array(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeUint8ClampedArray(data, array) {
 	yield* serializeValue(data, array.length);
-	yield* data.append(new Uint8ClampedArray(array.buffer));
+	yield* data.append(new Uint8Array(array.buffer));
 }
 
 function* serializeUint8Array(data, array) {
