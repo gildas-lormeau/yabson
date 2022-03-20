@@ -126,6 +126,7 @@ export {
 	testInt16,
 	testUint8,
 	testInt8,
+	testInteger,
 	testUndefinedValue,
 	testNullValue,
 	testNaNValue,
