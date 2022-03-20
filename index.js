@@ -143,7 +143,7 @@ function* serializeObject(data, object) {
 	const entries = Object.entries(object);
 	yield* serializeValue(data, entries.length);
 	for (const [key, value] of entries) {
-		yield* serializeValue(data, key);
+		yield* serializeString(data, key);
 		yield* serializeValue(data, value);
 	}
 }
@@ -227,18 +227,18 @@ function* serializeSet(data, set) {
 }
 
 function* serializeDate(data, date) {
-	yield* serializeValue(data, date.getTime());
+	yield* serializeNumber(data, date.getTime());
 }
 
 function* serializeError(data, error) {
-	yield* serializeValue(data, error.name);
-	yield* serializeValue(data, error.message);
-	yield* serializeValue(data, error.stack);
+	yield* serializeString(data, error.name);
+	yield* serializeString(data, error.message);
+	yield* serializeString(data, error.stack);
 }
 
 function* serializeRegExp(data, regExp) {
-	yield* serializeValue(data, regExp.source);
-	yield* serializeValue(data, regExp.flags);
+	yield* serializeString(data, regExp.source);
+	yield* serializeString(data, regExp.flags);
 }
 
 class ReadStream {
@@ -353,7 +353,7 @@ function* parseObject(data) {
 	const size = yield* parseValue(data);
 	const object = {};
 	for (let indexKey = 0; indexKey < size; indexKey++) {
-		const key = yield* parseValue(data);
+		const key = yield* parseString(data);
 		const value = yield* parseValue(data);
 		object[key] = value;
 	}
@@ -457,14 +457,14 @@ function* parseSet(data) {
 }
 
 function* parseDate(data) {
-	const milliseconds = yield* parseValue(data);
+	const milliseconds = yield* parseNumber(data);
 	return new Date(milliseconds);
 }
 
 function* parseError(data) {
-	const name = yield* parseValue(data);
-	const message = yield* parseValue(data);
-	const stack = yield* parseValue(data);
+	const name = yield* parseString(data);
+	const message = yield* parseString(data);
+	const stack = yield* parseString(data);
 	const error = new Error(message);
 	error.name = name;
 	error.stack = stack;
@@ -472,8 +472,8 @@ function* parseError(data) {
 }
 
 function* parseRegExp(data) {
-	const source = yield* parseValue(data);
-	const flags = yield* parseValue(data);
+	const source = yield* parseString(data);
+	const flags = yield* parseString(data);
 	return new RegExp(source, flags);
 }
 
