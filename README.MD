@@ -1,7 +1,8 @@
 ## YaBSON
 
 Binary-encoded serialization of JavaScript objects with generator-based parser
-and serializer.
+and serializer. This library was designed to serialize/parse large arbitrary
+amounts of data in JavaScript.
 
 Example
 
