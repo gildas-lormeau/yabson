@@ -2,74 +2,47 @@
 
 const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
 
-const TYPE_UNDEFINED_VALUE = 0;
-const TYPE_NULL_VALUE = 1;
-const TYPE_NAN_VALUE = 2;
-const TYPE_BOOLEAN = 3;
-const TYPE_STRING = 4;
-const TYPE_MAP = 5;
-const TYPE_SET = 6;
-const TYPE_DATE = 7;
-const TYPE_ERROR = 8;
-const TYPE_REGEXP = 9;
-const TYPE_INT8 = 10;
-const TYPE_UINT8 = 11;
-const TYPE_INT16 = 12;
-const TYPE_UINT16 = 13;
-const TYPE_INT32 = 14;
-const TYPE_UINT32 = 15;
-const TYPE_BIGINT = 16;
-const TYPE_NUMBER = 17;
-const TYPE_INT8_ARRAY = 18;
-const TYPE_UINT8_ARRAY = 19;
-const TYPE_UINT8_CLAMPED_ARRAY = 20;
-const TYPE_INT16_ARRAY = 21;
-const TYPE_UINT16_ARRAY = 22;
-const TYPE_INT32_ARRAY = 23;
-const TYPE_UINT32_ARRAY = 24;
-const TYPE_FLOAT32_ARRAY = 25;
-const TYPE_FLOAT64_ARRAY = 26;
-const TYPE_BIG_INT64_ARRAY = 27;
-const TYPE_BIG_UINT64_ARRAY = 28;
-const TYPE_ARRAY = 29;
-const TYPE_OBJECT = 30;
-
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
-const types = new Map();
-types.set(TYPE_UNDEFINED_VALUE, { parse: parseUndefinedValue, serialize: serializeUndefinedValue, testType: isUndefinedValue });
-types.set(TYPE_NULL_VALUE, { parse: parseNullValue, serialize: serializeNullValue, testType: isNullValue });
-types.set(TYPE_NAN_VALUE, { parse: parseNaNValue, serialize: serializeNaNValue, testType: isNaNValue });
-types.set(TYPE_BOOLEAN, { parse: parseBoolean, serialize: serializeBoolean, testType: isBoolean });
-types.set(TYPE_STRING, { parse: parseString, serialize: serializeString, testType: isString });
-types.set(TYPE_MAP, { parse: parseMap, serialize: serializeMap, testType: isMap });
-types.set(TYPE_SET, { parse: parseSet, serialize: serializeSet, testType: isSet });
-types.set(TYPE_DATE, { parse: parseDate, serialize: serializeDate, testType: isDate });
-types.set(TYPE_ERROR, { parse: parseError, serialize: serializeError, testType: isError });
-types.set(TYPE_REGEXP, { parse: parseRegExp, serialize: serializeRegExp, testType: isRegExp });
-types.set(TYPE_INT8, { parse: parseInt8, serialize: serializeInt8, testType: isInt8 });
-types.set(TYPE_UINT8, { parse: parseUint8, serialize: serializeUint8, testType: isUint8 });
-types.set(TYPE_INT16, { parse: parseInt16, serialize: serializeInt16, testType: isInt16 });
-types.set(TYPE_UINT16, { parse: parseUint16, serialize: serializeUint16, testType: isUint16 });
-types.set(TYPE_INT32, { parse: parseInt32, serialize: serializeInt32, testType: isInt32 });
-types.set(TYPE_UINT32, { parse: parseUint32, serialize: serializeUint32, testType: isUint32 });
-types.set(TYPE_BIGINT, { parse: parseBigInt, serialize: serializeBigInt, testType: isBigInt });
-types.set(TYPE_NUMBER, { parse: parseNumber, serialize: serializeNumber, testType: isNumber });
-types.set(TYPE_INT8_ARRAY, { parse: parseInt8Array, serialize: serializeInt8Array, testType: isInt8Array });
-types.set(TYPE_UINT8_ARRAY, { parse: parseUint8Array, serialize: serializeUint8Array, testType: isUint8Array });
-types.set(TYPE_UINT8_CLAMPED_ARRAY, { parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, testType: isUint8ClampedArray });
-types.set(TYPE_INT16_ARRAY, { parse: parseInt16Array, serialize: serializeInt16Array, testType: isInt16Array });
-types.set(TYPE_UINT16_ARRAY, { parse: parseUint16Array, serialize: serializeUint16Array, testType: isUint16Array });
-types.set(TYPE_INT32_ARRAY, { parse: parseInt32Array, serialize: serializeInt32Array, testType: isInt32Array });
-types.set(TYPE_UINT32_ARRAY, { parse: parseUint32Array, serialize: serializeUint32Array, testType: isUint32Array });
-types.set(TYPE_FLOAT32_ARRAY, { parse: parseFloat32Array, serialize: serializeFloat32Array, testType: isFloat32Array });
-types.set(TYPE_FLOAT64_ARRAY, { parse: parseFloat64Array, serialize: serializeFloat64Array, testType: isFloat64Array });
-types.set(TYPE_BIG_INT64_ARRAY, { parse: parseBigInt64Array, serialize: serializeBigInt64Array, testType: isBigInt64Array });
-types.set(TYPE_BIG_UINT64_ARRAY, { parse: parseBigUint64Array, serialize: serializeBigUint64Array, testType: isBigUint64Array });
-types.set(TYPE_ARRAY, { parse: parseArray, serialize: serializeArray, testType: isArray });
-types.set(TYPE_OBJECT, { parse: parseObject, serialize: serializeObject, testType: isObject });
+const types = [];
 
-export { getSerializer, getParser };
+registerType({ parse: parseObject, serialize: serializeObject, testType: isObject });
+registerType({ parse: parseArray, serialize: serializeArray, testType: isArray });
+registerType({ parse: parseString, serialize: serializeString, testType: isString });
+registerType({ parse: parseBigUint64Array, serialize: serializeBigUint64Array, testType: isBigUint64Array });
+registerType({ parse: parseBigInt64Array, serialize: serializeBigInt64Array, testType: isBigInt64Array });
+registerType({ parse: parseFloat64Array, serialize: serializeFloat64Array, testType: isFloat64Array });
+registerType({ parse: parseFloat32Array, serialize: serializeFloat32Array, testType: isFloat32Array });
+registerType({ parse: parseUint32Array, serialize: serializeUint32Array, testType: isUint32Array });
+registerType({ parse: parseInt32Array, serialize: serializeInt32Array, testType: isInt32Array });
+registerType({ parse: parseUint16Array, serialize: serializeUint16Array, testType: isUint16Array });
+registerType({ parse: parseInt16Array, serialize: serializeInt16Array, testType: isInt16Array });
+registerType({ parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, testType: isUint8ClampedArray });
+registerType({ parse: parseUint8Array, serialize: serializeUint8Array, testType: isUint8Array });
+registerType({ parse: parseInt8Array, serialize: serializeInt8Array, testType: isInt8Array });
+registerType({ parse: parseNumber, serialize: serializeNumber, testType: isNumber });
+registerType({ parse: parseBigInt, serialize: serializeBigInt, testType: isBigInt });
+registerType({ parse: parseUint32, serialize: serializeUint32, testType: isUint32 });
+registerType({ parse: parseInt32, serialize: serializeInt32, testType: isInt32 });
+registerType({ parse: parseUint16, serialize: serializeUint16, testType: isUint16 });
+registerType({ parse: parseInt16, serialize: serializeInt16, testType: isInt16 });
+registerType({ parse: parseUint8, serialize: serializeUint8, testType: isUint8 });
+registerType({ parse: parseInt8, serialize: serializeInt8, testType: isInt8 });
+registerType({ parse: parseUndefinedValue, serialize: serializeUndefinedValue, testType: isUndefinedValue });
+registerType({ parse: parseNullValue, serialize: serializeNullValue, testType: isNullValue });
+registerType({ parse: parseNaNValue, serialize: serializeNaNValue, testType: isNaNValue });
+registerType({ parse: parseBoolean, serialize: serializeBoolean, testType: isBoolean });
+registerType({ parse: parseMap, serialize: serializeMap, testType: isMap });
+registerType({ parse: parseSet, serialize: serializeSet, testType: isSet });
+registerType({ parse: parseDate, serialize: serializeDate, testType: isDate });
+registerType({ parse: parseError, serialize: serializeError, testType: isError });
+registerType({ parse: parseRegExp, serialize: serializeRegExp, testType: isRegExp });
+
+export { getSerializer, getParser, registerType };
+
+function registerType(functions) {
+	types.unshift(functions);
+}
 
 class WriteStream {
 	constructor(chunkSize) {
@@ -105,170 +78,170 @@ function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
 }
 
 function* serializeValue(data, value) {
-	const type = Array.from(types.entries()).find(([, { testType }]) => testType(value))[0];
-	const serialize = types.get(type).serialize;
-	yield* serialize(data, value);
+	const type = types.findIndex(({ testType }) => testType(value));
+	const serialize = types[type].serialize;
+	yield* serialize(data, type, value);
 }
 
-function* serializeBoolean(data, boolean) {
-	yield* data.append(new Uint8Array([TYPE_BOOLEAN]));
+function* serializeBoolean(data, type, boolean) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedBoolean = new Uint8Array([Number(boolean)]);
 	yield* data.append(serializedBoolean);
 }
 
-function* serializeNumber(data, number) {
-	yield* data.append(new Uint8Array([TYPE_NUMBER]));
+function* serializeNumber(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new Float64Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeInt8(data, number) {
-	yield* data.append(new Uint8Array([TYPE_INT8]));
+function* serializeInt8(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new Int8Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeUint8(data, number) {
-	yield* data.append(new Uint8Array([TYPE_UINT8]));
+function* serializeUint8(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array([number]);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeInt16(data, number) {
-	yield* data.append(new Uint8Array([TYPE_INT16]));
+function* serializeInt16(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new Int16Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeUint16(data, number) {
-	yield* data.append(new Uint8Array([TYPE_UINT16]));
+function* serializeUint16(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new Uint16Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeInt32(data, number) {
-	yield* data.append(new Uint8Array([TYPE_INT32]));
+function* serializeInt32(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new Int32Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeUint32(data, number) {
-	yield* data.append(new Uint8Array([TYPE_UINT32]));
+function* serializeUint32(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new Uint32Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeBigInt(data, number) {
-	yield* data.append(new Uint8Array([TYPE_BIGINT]));
+function* serializeBigInt(data, type, number) {
+	yield* data.append(new Uint8Array([type]));
 	const serializedNumber = new Uint8Array(new BigInt64Array([number]).buffer);
 	yield* data.append(serializedNumber);
 }
 
-function* serializeString(data, string) {
-	yield* data.append(new Uint8Array([TYPE_STRING]));
+function* serializeString(data, type, string) {
+	yield* data.append(new Uint8Array([type]));
 	const encodedString = textEncoder.encode(string);
 	yield* serializeValue(data, encodedString.length);
 	yield* data.append(encodedString);
 }
 
-function* serializeNullValue(data) {
-	yield* data.append(new Uint8Array([TYPE_NULL_VALUE]));
+function* serializeNullValue(data, type) {
+	yield* data.append(new Uint8Array([type]));
 }
 
-function* serializeUndefinedValue(data) {
-	yield* data.append(new Uint8Array([TYPE_UNDEFINED_VALUE]));
+function* serializeUndefinedValue(data, type) {
+	yield* data.append(new Uint8Array([type]));
 }
 
-function* serializeNaNValue(data) {
-	yield* data.append(new Uint8Array([TYPE_NAN_VALUE]));
+function* serializeNaNValue(data, type) {
+	yield* data.append(new Uint8Array([type]));
 }
 
-function* serializeObject(data, object) {
-	yield* data.append(new Uint8Array([TYPE_OBJECT]));
+function* serializeObject(data, type, object) {
+	yield* data.append(new Uint8Array([type]));
 	const entries = Object.entries(object);
 	yield* serializeValue(data, entries.length);
 	for (const [key, value] of entries) {
-		yield* serializeString(data, key);
+		yield* serializeValue(data, key);
 		yield* serializeValue(data, value);
 	}
 }
 
-function* serializeArray(data, array) {
-	yield* data.append(new Uint8Array([TYPE_ARRAY]));
+function* serializeArray(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	for (const value of array) {
 		yield* serializeValue(data, value);
 	}
 }
 
-function* serializeUint8Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_UINT8_ARRAY]));
+function* serializeUint8Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(array);
 }
 
-function* serializeInt8Array(data, array) {
-	yield* data.append(new Int8Array([TYPE_INT8_ARRAY]));
+function* serializeInt8Array(data, type, array) {
+	yield* data.append(new Int8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Uint8Array(array.buffer));
 }
 
-function* serializeUint8ClampedArray(data, array) {
-	yield* data.append(new Uint8Array([TYPE_UINT8_CLAMPED_ARRAY]));
+function* serializeUint8ClampedArray(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Uint8ClampedArray(array.buffer));
 }
 
-function* serializeInt16Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_INT16_ARRAY]));
+function* serializeInt16Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Int16Array(array.buffer));
 }
 
-function* serializeUint16Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_UINT16_ARRAY]));
+function* serializeUint16Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Uint16Array(array.buffer));
 }
 
-function* serializeInt32Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_INT32_ARRAY]));
+function* serializeInt32Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Int32Array(array.buffer));
 }
 
-function* serializeUint32Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_UINT32_ARRAY]));
+function* serializeUint32Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Uint32Array(array.buffer));
 }
 
-function* serializeFloat32Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_FLOAT32_ARRAY]));
+function* serializeFloat32Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Float32Array(array.buffer));
 }
 
-function* serializeFloat64Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_FLOAT64_ARRAY]));
+function* serializeFloat64Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new Float64Array(array.buffer));
 }
 
-function* serializeBigInt64Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_BIG_INT64_ARRAY]));
+function* serializeBigInt64Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new BigInt64Array(array.buffer));
 }
 
-function* serializeBigUint64Array(data, array) {
-	yield* data.append(new Uint8Array([TYPE_BIG_UINT64_ARRAY]));
+function* serializeBigUint64Array(data, type, array) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, array.length);
 	yield* data.append(new BigUint64Array(array.buffer));
 }
 
-function* serializeMap(data, map) {
-	yield* data.append(new Uint8Array([TYPE_MAP]));
+function* serializeMap(data, type, map) {
+	yield* data.append(new Uint8Array([type]));
 	const entries = map.entries();
 	yield* serializeValue(data, map.size);
 	for (const [key, value] of entries) {
@@ -277,30 +250,30 @@ function* serializeMap(data, map) {
 	}
 }
 
-function* serializeSet(data, set) {
-	yield* data.append(new Uint8Array([TYPE_SET]));
+function* serializeSet(data, type, set) {
+	yield* data.append(new Uint8Array([type]));
 	yield* serializeValue(data, set.size);
 	for (const value of set) {
 		yield* serializeValue(data, value);
 	}
 }
 
-function* serializeDate(data, date) {
-	yield* data.append(new Uint8Array([TYPE_DATE]));
-	yield* serializeNumber(data, date.getTime());
+function* serializeDate(data, type, date) {
+	yield* data.append(new Uint8Array([type]));
+	yield* serializeValue(data, date.getTime());
 }
 
-function* serializeError(data, error) {
-	yield* data.append(new Uint8Array([TYPE_ERROR]));
-	yield* serializeString(data, error.name);
-	yield* serializeString(data, error.message);
-	yield* serializeString(data, error.stack);
+function* serializeError(data, type, error) {
+	yield* data.append(new Uint8Array([type]));
+	yield* serializeValue(data, error.name);
+	yield* serializeValue(data, error.message);
+	yield* serializeValue(data, error.stack);
 }
 
-function* serializeRegExp(data, regExp) {
-	yield* data.append(new Uint8Array([TYPE_REGEXP]));
-	yield* serializeString(data, regExp.source);
-	yield* serializeString(data, regExp.flags);
+function* serializeRegExp(data, type, regExp) {
+	yield* data.append(new Uint8Array([type]));
+	yield* serializeValue(data, regExp.source);
+	yield* serializeValue(data, regExp.flags);
 }
 
 class ReadStream {
@@ -340,7 +313,7 @@ function* getParseGenerator() {
 function* parseValue(data) {
 	const array = yield* data.consume(1);
 	const parserType = array[0];
-	const parser = types.get(parserType).parse;
+	const parser = types[parserType].parse;
 	const result = yield* parser(data);
 	return result;
 }
