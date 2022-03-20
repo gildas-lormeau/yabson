@@ -308,8 +308,7 @@ function getParser() {
 }
 
 function* getParseGenerator() {
-	const result = yield* parseValue(new ReadStream());
-	return result;
+	return yield* parseValue(new ReadStream());
 }
 
 function* parseValue(data) {
