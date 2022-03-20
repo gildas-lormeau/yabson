@@ -29,12 +29,15 @@ const object = {
   set: new Set([1, 2, 3]),
 };
 
-const serializer = getSerializer(object, { chunkSize: 16 }); // chunkSize (optional) is the size in bytes of the chunk values
+// chunkSize (optional) is the max. size in bytes of chunks if the for loop
+const serializer = getSerializer(object, { chunkSize: 16 });
 const parser = getParser();
 
 let result;
 for (const chunk of serializer) {
-  result = parser.next(chunk); // chunk is a Uint8array of binary encoded data
+  // chunk is a Uint8array of binary encoded data
+  result = parser.next(chunk);
 }
-console.log(result.value); // displays a deep clone of object
+// displays a deep clone of object
+console.log(result.value);
 ```
