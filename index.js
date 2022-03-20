@@ -4,7 +4,8 @@ const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
-const types = [];
+const types = new Array(256);
+let typeIndex = 0;
 
 registerType({ parse: parseObject, serialize: serializeObject, testType: isObject });
 registerType({ parse: parseArray, serialize: serializeArray, testType: isArray });
@@ -41,7 +42,8 @@ registerType({ parse: parseRegExp, serialize: serializeRegExp, testType: isRegEx
 export { getSerializer, getParser, registerType };
 
 function registerType(functions) {
-	types.unshift(functions);
+	typeIndex++;
+	types[types.length - typeIndex] = functions;
 }
 
 class WriteStream {
@@ -78,7 +80,7 @@ function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
 }
 
 function* serializeValue(data, value) {
-	const type = types.findIndex(({ testType }) => testType(value));
+	const type = types.findIndex(({ testType } = {}) => testType && testType(value));
 	const serialize = types[type].serialize;
 	yield* serialize(data, type, value);
 }
