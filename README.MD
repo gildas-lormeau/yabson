@@ -29,7 +29,7 @@ const object = {
   set: new Set([1, 2, 3]),
 };
 
-// chunkSize (optional) is the max. size in bytes of chunks in the for loop below
+// chunkSize (optional) is the max. size in bytes of `chunk` in the for-of loop below
 const serializer = getSerializer(object, { chunkSize: 16 });
 const parser = getParser();
 
@@ -38,6 +38,6 @@ for (const chunk of serializer) {
   // chunk is a Uint8array of binary encoded data
   result = parser.next(chunk);
 }
-// displays a deep clone of object
+// displays a deep clone of `object`
 console.log(result.value);
 ```
