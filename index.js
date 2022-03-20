@@ -7,37 +7,37 @@ const textDecoder = new TextDecoder();
 const types = new Array(256);
 let typeIndex = 0;
 
-registerType({ parse: parseObject, serialize: serializeObject, testType: isObject });
-registerType({ parse: parseArray, serialize: serializeArray, testType: isArray });
-registerType({ parse: parseString, serialize: serializeString, testType: isString });
-registerType({ parse: parseBigUint64Array, serialize: serializeBigUint64Array, testType: isBigUint64Array });
-registerType({ parse: parseBigInt64Array, serialize: serializeBigInt64Array, testType: isBigInt64Array });
-registerType({ parse: parseFloat64Array, serialize: serializeFloat64Array, testType: isFloat64Array });
-registerType({ parse: parseFloat32Array, serialize: serializeFloat32Array, testType: isFloat32Array });
-registerType({ parse: parseUint32Array, serialize: serializeUint32Array, testType: isUint32Array });
-registerType({ parse: parseInt32Array, serialize: serializeInt32Array, testType: isInt32Array });
-registerType({ parse: parseUint16Array, serialize: serializeUint16Array, testType: isUint16Array });
-registerType({ parse: parseInt16Array, serialize: serializeInt16Array, testType: isInt16Array });
-registerType({ parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, testType: isUint8ClampedArray });
-registerType({ parse: parseUint8Array, serialize: serializeUint8Array, testType: isUint8Array });
-registerType({ parse: parseInt8Array, serialize: serializeInt8Array, testType: isInt8Array });
-registerType({ parse: parseNumber, serialize: serializeNumber, testType: isNumber });
-registerType({ parse: parseBigInt, serialize: serializeBigInt, testType: isBigInt });
-registerType({ parse: parseUint32, serialize: serializeUint32, testType: isUint32 });
-registerType({ parse: parseInt32, serialize: serializeInt32, testType: isInt32 });
-registerType({ parse: parseUint16, serialize: serializeUint16, testType: isUint16 });
-registerType({ parse: parseInt16, serialize: serializeInt16, testType: isInt16 });
-registerType({ parse: parseUint8, serialize: serializeUint8, testType: isUint8 });
-registerType({ parse: parseInt8, serialize: serializeInt8, testType: isInt8 });
-registerType({ parse: parseUndefinedValue, serialize: serializeUndefinedValue, testType: isUndefinedValue });
-registerType({ parse: parseNullValue, serialize: serializeNullValue, testType: isNullValue });
-registerType({ parse: parseNaNValue, serialize: serializeNaNValue, testType: isNaNValue });
-registerType({ parse: parseBoolean, serialize: serializeBoolean, testType: isBoolean });
-registerType({ parse: parseMap, serialize: serializeMap, testType: isMap });
-registerType({ parse: parseSet, serialize: serializeSet, testType: isSet });
-registerType({ parse: parseDate, serialize: serializeDate, testType: isDate });
-registerType({ parse: parseError, serialize: serializeError, testType: isError });
-registerType({ parse: parseRegExp, serialize: serializeRegExp, testType: isRegExp });
+registerType({ parse: parseObject, serialize: serializeObject, test: isObject });
+registerType({ parse: parseArray, serialize: serializeArray, test: isArray });
+registerType({ parse: parseString, serialize: serializeString, test: isString });
+registerType({ parse: parseBigUint64Array, serialize: serializeBigUint64Array, test: isBigUint64Array });
+registerType({ parse: parseBigInt64Array, serialize: serializeBigInt64Array, test: isBigInt64Array });
+registerType({ parse: parseFloat64Array, serialize: serializeFloat64Array, test: isFloat64Array });
+registerType({ parse: parseFloat32Array, serialize: serializeFloat32Array, test: isFloat32Array });
+registerType({ parse: parseUint32Array, serialize: serializeUint32Array, test: isUint32Array });
+registerType({ parse: parseInt32Array, serialize: serializeInt32Array, test: isInt32Array });
+registerType({ parse: parseUint16Array, serialize: serializeUint16Array, test: isUint16Array });
+registerType({ parse: parseInt16Array, serialize: serializeInt16Array, test: isInt16Array });
+registerType({ parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, test: isUint8ClampedArray });
+registerType({ parse: parseUint8Array, serialize: serializeUint8Array, test: isUint8Array });
+registerType({ parse: parseInt8Array, serialize: serializeInt8Array, test: isInt8Array });
+registerType({ parse: parseNumber, serialize: serializeNumber, test: isNumber });
+registerType({ parse: parseBigInt, serialize: serializeBigInt, test: isBigInt });
+registerType({ parse: parseUint32, serialize: serializeUint32, test: isUint32 });
+registerType({ parse: parseInt32, serialize: serializeInt32, test: isInt32 });
+registerType({ parse: parseUint16, serialize: serializeUint16, test: isUint16 });
+registerType({ parse: parseInt16, serialize: serializeInt16, test: isInt16 });
+registerType({ parse: parseUint8, serialize: serializeUint8, test: isUint8 });
+registerType({ parse: parseInt8, serialize: serializeInt8, test: isInt8 });
+registerType({ parse: parseUndefinedValue, serialize: serializeUndefinedValue, test: isUndefinedValue });
+registerType({ parse: parseNullValue, serialize: serializeNullValue, test: isNullValue });
+registerType({ parse: parseNaNValue, serialize: serializeNaNValue, test: isNaNValue });
+registerType({ parse: parseBoolean, serialize: serializeBoolean, test: isBoolean });
+registerType({ parse: parseMap, serialize: serializeMap, test: isMap });
+registerType({ parse: parseSet, serialize: serializeSet, test: isSet });
+registerType({ parse: parseDate, serialize: serializeDate, test: isDate });
+registerType({ parse: parseError, serialize: serializeError, test: isError });
+registerType({ parse: parseRegExp, serialize: serializeRegExp, test: isRegExp });
 
 export { getSerializer, getParser, registerType };
 
@@ -80,7 +80,7 @@ function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
 }
 
 function* serializeValue(data, value) {
-	const type = types.findIndex(({ testType } = {}) => testType && testType(value));
+	const type = types.findIndex(({ test } = {}) => test && test(value));
 	const serialize = types[type].serialize;
 	yield* serialize(data, type, value);
 }
