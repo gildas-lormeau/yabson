@@ -7,37 +7,37 @@ const textDecoder = new TextDecoder();
 const types = new Array(256);
 let typeIndex = 0;
 
-registerType({ parse: parseObject, serialize: serializeObject, test: isObject });
-registerType({ parse: parseArray, serialize: serializeArray, test: isArray });
-registerType({ parse: parseString, serialize: serializeString, test: isString });
-registerType({ parse: parseBigUint64Array, serialize: serializeBigUint64Array, test: isBigUint64Array });
-registerType({ parse: parseBigInt64Array, serialize: serializeBigInt64Array, test: isBigInt64Array });
-registerType({ parse: parseFloat64Array, serialize: serializeFloat64Array, test: isFloat64Array });
-registerType({ parse: parseFloat32Array, serialize: serializeFloat32Array, test: isFloat32Array });
-registerType({ parse: parseUint32Array, serialize: serializeUint32Array, test: isUint32Array });
-registerType({ parse: parseInt32Array, serialize: serializeInt32Array, test: isInt32Array });
-registerType({ parse: parseUint16Array, serialize: serializeUint16Array, test: isUint16Array });
-registerType({ parse: parseInt16Array, serialize: serializeInt16Array, test: isInt16Array });
-registerType({ parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, test: isUint8ClampedArray });
-registerType({ parse: parseUint8Array, serialize: serializeUint8Array, test: isUint8Array });
-registerType({ parse: parseInt8Array, serialize: serializeInt8Array, test: isInt8Array });
-registerType({ parse: parseNumber, serialize: serializeNumber, test: isNumber });
-registerType({ parse: parseBigInt, serialize: serializeBigInt, test: isBigInt });
-registerType({ parse: parseUint32, serialize: serializeUint32, test: isUint32 });
-registerType({ parse: parseInt32, serialize: serializeInt32, test: isInt32 });
-registerType({ parse: parseUint16, serialize: serializeUint16, test: isUint16 });
-registerType({ parse: parseInt16, serialize: serializeInt16, test: isInt16 });
-registerType({ parse: parseUint8, serialize: serializeUint8, test: isUint8 });
-registerType({ parse: parseInt8, serialize: serializeInt8, test: isInt8 });
-registerType({ parse: parseUndefinedValue, test: isUndefinedValue });
-registerType({ parse: parseNullValue, test: isNullValue });
-registerType({ parse: parseNaNValue, test: isNaNValue });
-registerType({ parse: parseBoolean, serialize: serializeBoolean, test: isBoolean });
-registerType({ parse: parseMap, serialize: serializeMap, test: isMap });
-registerType({ parse: parseSet, serialize: serializeSet, test: isSet });
-registerType({ parse: parseDate, serialize: serializeDate, test: isDate });
-registerType({ parse: parseError, serialize: serializeError, test: isError });
-registerType({ parse: parseRegExp, serialize: serializeRegExp, test: isRegExp });
+registerType({ parse: parseObject, serialize: serializeObject, test: testObject });
+registerType({ parse: parseArray, serialize: serializeArray, test: testArray });
+registerType({ parse: parseString, serialize: serializeString, test: testString });
+registerType({ parse: parseBigUint64Array, serialize: serializeBigUint64Array, test: testBigUint64Array });
+registerType({ parse: parseBigInt64Array, serialize: serializeBigInt64Array, test: testBigInt64Array });
+registerType({ parse: parseFloat64Array, serialize: serializeFloat64Array, test: testFloat64Array });
+registerType({ parse: parseFloat32Array, serialize: serializeFloat32Array, test: testFloat32Array });
+registerType({ parse: parseUint32Array, serialize: serializeUint32Array, test: testUint32Array });
+registerType({ parse: parseInt32Array, serialize: serializeInt32Array, test: testInt32Array });
+registerType({ parse: parseUint16Array, serialize: serializeUint16Array, test: testUint16Array });
+registerType({ parse: parseInt16Array, serialize: serializeInt16Array, test: testInt16Array });
+registerType({ parse: parseUint8ClampedArray, serialize: serializeUint8ClampedArray, test: testUint8ClampedArray });
+registerType({ parse: parseUint8Array, serialize: serializeUint8Array, test: testUint8Array });
+registerType({ parse: parseInt8Array, serialize: serializeInt8Array, test: testInt8Array });
+registerType({ parse: parseNumber, serialize: serializeNumber, test: testNumber });
+registerType({ parse: parseBigInt, serialize: serializeBigInt, test: testBigInt });
+registerType({ parse: parseUint32, serialize: serializeUint32, test: testUint32 });
+registerType({ parse: parseInt32, serialize: serializeInt32, test: testInt32 });
+registerType({ parse: parseUint16, serialize: serializeUint16, test: testUint16 });
+registerType({ parse: parseInt16, serialize: serializeInt16, test: testInt16 });
+registerType({ parse: parseUint8, serialize: serializeUint8, test: testUint8 });
+registerType({ parse: parseInt8, serialize: serializeInt8, test: testInt8 });
+registerType({ parse: parseUndefinedValue, test: testUndefinedValue });
+registerType({ parse: parseNullValue, test: testNullValue });
+registerType({ parse: parseNaNValue, test: testNaNValue });
+registerType({ parse: parseBoolean, serialize: serializeBoolean, test: testBoolean });
+registerType({ parse: parseMap, serialize: serializeMap, test: testMap });
+registerType({ parse: parseSet, serialize: serializeSet, test: testSet });
+registerType({ parse: parseDate, serialize: serializeDate, test: testDate });
+registerType({ parse: parseError, serialize: serializeError, test: testError });
+registerType({ parse: parseRegExp, serialize: serializeRegExp, test: testRegExp });
 
 export { getSerializer, getParser, registerType };
 
@@ -477,129 +477,129 @@ function* parseRegExp(data) {
 	return new RegExp(source, flags);
 }
 
-function isUndefinedValue(value) {
+function testUndefinedValue(value) {
 	return value === undefined;
 }
 
-function isNullValue(value) {
+function testNullValue(value) {
 	return value === null;
 }
 
-function isNaNValue(value) {
+function testNaNValue(value) {
 	return Number.isNaN(value);
 }
 
-function isString(value) {
+function testString(value) {
 	return typeof value == "string";
 }
 
-function isArray(value) {
+function testArray(value) {
 	return typeof value.length == "number";
 }
 
-function isObject(value) {
+function testObject(value) {
 	return value === Object(value);
 }
 
-function isInt8(value) {
-	return isInteger(value) && value >= -128 && value <= 127;
+function testInt8(value) {
+	return testInteger(value) && value >= -128 && value <= 127;
 }
 
-function isUint8(value) {
-	return isInteger(value) && value >= 0 && value <= 255;
+function testUint8(value) {
+	return testInteger(value) && value >= 0 && value <= 255;
 }
 
-function isInt16(value) {
-	return isInteger(value) && value >= -32768 && value <= 32767;
+function testInt16(value) {
+	return testInteger(value) && value >= -32768 && value <= 32767;
 }
 
-function isUint16(value) {
-	return isInteger(value) && value >= 0 && value <= 65535;
+function testUint16(value) {
+	return testInteger(value) && value >= 0 && value <= 65535;
 }
 
-function isInt32(value) {
-	return isInteger(value) && value >= -2147483648 && value <= 2147483647;
+function testInt32(value) {
+	return testInteger(value) && value >= -2147483648 && value <= 2147483647;
 }
 
-function isUint32(value) {
-	return isInteger(value) && value >= 0 && value <= 4294967295;
+function testUint32(value) {
+	return testInteger(value) && value >= 0 && value <= 4294967295;
 }
 
-function isInteger(value) {
-	return isNumber(value) && value == Number.parseInt(value, 10);
+function testInteger(value) {
+	return testNumber(value) && value == Number.parseInt(value, 10);
 }
 
-function isNumber(value) {
+function testNumber(value) {
 	return typeof value == "number";
 }
-function isBigInt(value) {
+function testBigInt(value) {
 	return typeof value == "bigint";
 }
 
-function isBoolean(value) {
+function testBoolean(value) {
 	return typeof value == "boolean";
 }
 
-function isUint8Array(value) {
+function testUint8Array(value) {
 	return value instanceof Uint8Array;
 }
 
-function isInt8Array(value) {
+function testInt8Array(value) {
 	return value instanceof Int8Array;
 }
 
-function isUint8ClampedArray(value) {
-	return value instanceof isUint8ClampedArray;
+function testUint8ClampedArray(value) {
+	return value instanceof Uint8ClampedArray;
 }
 
-function isInt16Array(value) {
+function testInt16Array(value) {
 	return value instanceof Int16Array;
 }
 
-function isUint16Array(value) {
+function testUint16Array(value) {
 	return value instanceof Uint16Array;
 }
 
-function isInt32Array(value) {
+function testInt32Array(value) {
 	return value instanceof Int32Array;
 }
 
-function isUint32Array(value) {
+function testUint32Array(value) {
 	return value instanceof Uint32Array;
 }
 
-function isFloat32Array(value) {
+function testFloat32Array(value) {
 	return value instanceof Float32Array;
 }
 
-function isFloat64Array(value) {
+function testFloat64Array(value) {
 	return value instanceof Float64Array;
 }
 
-function isBigInt64Array(value) {
+function testBigInt64Array(value) {
 	return value instanceof BigInt64Array;
 }
 
-function isBigUint64Array(value) {
+function testBigUint64Array(value) {
 	return value instanceof BigUint64Array;
 }
 
-function isMap(value) {
+function testMap(value) {
 	return value instanceof Map;
 }
 
-function isSet(value) {
+function testSet(value) {
 	return value instanceof Set;
 }
 
-function isDate(value) {
+function testDate(value) {
 	return value instanceof Date;
 }
 
-function isError(value) {
+function testError(value) {
 	return value instanceof Error;
 }
 
-function isRegExp(value) {
+function testRegExp(value) {
 	return value instanceof RegExp;
 }
