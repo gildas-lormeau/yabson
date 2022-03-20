@@ -302,9 +302,9 @@ class ReadStream {
 }
 
 function getParser() {
-	const parseGenerator = getParseGenerator();
-	parseGenerator.next();
-	return parseGenerator;
+	const parser = getParseGenerator();
+	parser.next();
+	return parser;
 }
 
 function* getParseGenerator() {
