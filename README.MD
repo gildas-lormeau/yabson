@@ -85,7 +85,8 @@ function testCustomType(value) {
 }
 
 const array = [
-  new CustomType("custom"),
+  new CustomType("first"),
+	new CustomType("second"),
 ];
 
 const serializer = getSerializer(array);
