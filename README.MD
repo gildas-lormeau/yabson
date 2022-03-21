@@ -4,7 +4,8 @@ Binary-encoded serialization of JavaScript objects with generator-based parser
 and serializer
 
 This library is designed to serialize/parse arbitrary large amounts of data in
-JavaScript.
+JavaScript. The goal is to offer a very simple and easily extensible
+implementation.
 
 Example
 
