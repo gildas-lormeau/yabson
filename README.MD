@@ -7,7 +7,7 @@ This library is designed to serialize/parse arbitrary large amounts of data in
 JavaScript. The goal is to offer a very simple and easily extensible
 implementation.
 
-Example
+## Example
 
 ```js
 import { getParser, getSerializer } from "./index.js";
