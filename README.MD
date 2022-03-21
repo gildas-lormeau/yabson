@@ -5,7 +5,8 @@ and serializer
 
 This library is designed to serialize/parse large arbitrary amounts of data into
 chunks. The main goal is to provide a very simple and easily extensible API and
-implementation.
+implementation. This also illustrates pedagogically the interest of generators
+in JavaScript.
 
 ## Example
 
