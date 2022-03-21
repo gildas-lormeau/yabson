@@ -50,6 +50,54 @@ for (const chunk of serializer) {
 console.log(result.value);
 ```
 
+## Example with a custom type
+
+```js
+import {
+  getParser,
+  getSerializer,
+  parseString,
+  registerType,
+  serializeString,
+} from "yabson";
+
+// Custom type class
+class CustomType {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+// Register the custom type
+registerType(serializeCustomType, parseCustomType, testCustomType);
+
+function* serializeCustomType(data, customType) {
+  yield* serializeString(data, customType.name);
+}
+
+function* parseCustomType(data) {
+  const name = yield* parseString(data);
+  return new CustomType(name);
+}
+
+function testCustomType(value) {
+  return value instanceof CustomType;
+}
+
+const array = [
+  new CustomType("custom"),
+];
+
+const serializer = getSerializer(array);
+const parser = getParser();
+
+let result;
+for (const chunk of serializer) {
+  result = parser.next(chunk);
+}
+console.log(result.value);
+```
+
 ## Install
 
 ```sh
