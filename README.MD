@@ -8,8 +8,8 @@ chunks. The main goal is to provide a very simple and easily extensible API and
 implementation. This also illustrates pedagogically the interest of
 [iterators and generators](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Iterators_and_Generators)
 in JavaScript. Note that, like the JSON API, this library does not support
-circular references. The encoding is also determined by the endianness of the
-underlying hardware.
+circular references. The binary encoding is also determined by the endianness of
+the underlying hardware.
 
 ## Example
 
