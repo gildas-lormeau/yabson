@@ -13,7 +13,7 @@ circular references.
 ## Example
 
 ```js
-import { getParser, getSerializer } from "./index.js";
+import { getParser, getSerializer } from "yabson";
 
 const object = {
   array: [
@@ -47,4 +47,10 @@ for (const chunk of serializer) {
 }
 // displays a deep clone of `object`
 console.log(result.value);
+```
+
+## Install
+
+```sh
+npm install https://www.npmjs.com/package/yabson
 ```
