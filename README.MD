@@ -72,10 +72,12 @@ class CustomType {
 registerType(serializeCustomType, parseCustomType, testCustomType);
 
 function* serializeCustomType(data, customType) {
+  // delegates serialization to `serializeString` from yabson
   yield* serializeString(data, customType.name);
 }
 
 function* parseCustomType(data) {
+  // delegates parsing to `parseString` from yabson
   const name = yield* parseString(data);
   return new CustomType(name);
 }
@@ -96,6 +98,7 @@ let result;
 for (const chunk of serializer) {
   result = parser.next(chunk);
 }
+// displays a deep clone of `array`
 console.log(result.value);
 ```
 
