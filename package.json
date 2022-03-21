@@ -1,0 +1,26 @@
+{
+  "name": "yabson",
+  "description": "Binary-encoded serialization of JavaScript objects with generator-based parser and serializer",
+  "author": "Gildas Lormeau",
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "module",
+  "keywords": [
+    "serialization",
+    "parse",
+    "serialize",
+    "generator"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gildas-lormeau/YaBSON.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gildas-lormeau/YaBSON/issues"
+  },
+  "homepage": "https://github.com/gildas-lormeau/YaBSON",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
