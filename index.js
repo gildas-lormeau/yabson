@@ -168,8 +168,8 @@ function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
 
 function* serializeValue(data, value) {
 	const type = types.findIndex(({ test } = {}) => test && test(value));
-	const serialize = types[type].serialize;
 	yield* data.append(new Uint8Array([type]));
+	const serialize = types[type].serialize;
 	if (serialize) {
 		yield* serialize(data, value);
 	}
@@ -314,8 +314,8 @@ function* getParseGenerator() {
 function* parseValue(data) {
 	const array = yield* data.consume(1);
 	const parserType = array[0];
-	const parser = types[parserType].parse;
-	const result = yield* parser(data);
+	const parse = types[parserType].parse;
+	const result = yield* parse(data);
 	return result;
 }
 
