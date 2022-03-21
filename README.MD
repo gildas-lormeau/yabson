@@ -45,6 +45,7 @@ const parser = getParser();
 let result;
 for (const chunk of serializer) {
   // `chunk` is a Uint8array of binary encoded data
+  // parses immediately binary data
   result = parser.next(chunk);
 }
 // displays a deep clone of `object`
