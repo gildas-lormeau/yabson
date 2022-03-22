@@ -161,6 +161,9 @@ class WriteStream {
 function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
 	const data = new WriteStream(chunkSize);
 	yield* serializeValue(data, value);
+	if (data.pending) {
+		yield* data.append(new Uint8Array([]));
+	}
 	if (data.offset) {
 		yield data.value.subarray(0, data.offset);
 	}
