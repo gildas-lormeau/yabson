@@ -156,17 +156,21 @@ class WriteStream {
 			this.offset += array.length;
 		}
 	}
+
+	*flush() {
+		if (this.pending) {
+			yield* this.append(new Uint8Array([]));
+		}
+		if (this.offset) {
+			yield this.value.subarray(0, this.offset);
+		}
+	}
 }
 
 function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
 	const data = new WriteStream(chunkSize);
 	yield* serializeValue(data, value);
-	if (data.pending) {
-		yield* data.append(new Uint8Array([]));
-	}
-	if (data.offset) {
-		yield data.value.subarray(0, data.offset);
-	}
+	yield* data.flush();
 }
 
 function* serializeValue(data, value) {
