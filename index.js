@@ -40,6 +40,8 @@ registerType(serializeSet, parseSet, testSet);
 registerType(serializeDate, parseDate, testDate);
 registerType(serializeError, parseError, testError);
 registerType(serializeRegExp, parseRegExp, testRegExp);
+registerType(serializeStringObject, parseStringObject, testStringObject);
+registerType(serializeNumberObject, parseNumberObject, testNumberObject);
 
 export {
 	getSerializer,
@@ -65,6 +67,8 @@ export {
 	serializeDate,
 	serializeError,
 	serializeRegExp,
+	serializeStringObject,
+	serializeNumberObject,
 	parseValue,
 	parseObject,
 	parseArray,
@@ -97,6 +101,8 @@ export {
 	parseDate,
 	parseError,
 	parseRegExp,
+	parseStringObject,
+	parseNumberObject,
 	testObject,
 	testArray,
 	testString,
@@ -128,7 +134,9 @@ export {
 	testSet,
 	testDate,
 	testError,
-	testRegExp
+	testRegExp,
+	testStringObject,
+	testNumberObject
 };
 
 function registerType(serialize, parse, test, type) {
@@ -329,6 +337,14 @@ function* serializeError(data, error) {
 function* serializeRegExp(data, regExp) {
 	yield* serializeString(data, regExp.source);
 	yield* serializeString(data, regExp.flags);
+}
+
+function* serializeStringObject(data, string) {
+	yield* serializeString(data, string.toString());
+}
+
+function* serializeNumberObject(data, number) {
+	yield* serializeNumber(data, Number(number));
 }
 
 class ObjectWrapper {
@@ -626,6 +642,14 @@ function* parseRegExp(data) {
 	return new RegExp(source, flags);
 }
 
+function* parseStringObject(data) {
+	return new String(yield* parseString(data));
+}
+
+function* parseNumberObject(data) {
+	return new Number(yield* parseNumber(data));
+}
+
 function testCircularReference(value, data) {
 	return testObject(value) && data.objects.includes(value);
 }
@@ -759,4 +783,12 @@ function testError(value) {
 
 function testRegExp(value) {
 	return value instanceof RegExp;
+}
+
+function testStringObject(value) {
+	return value instanceof String;
+}
+
+function testNumberObject(value) {
+	return value instanceof Number;
 }

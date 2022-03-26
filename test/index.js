@@ -21,6 +21,8 @@ const createFunctions = [
 	createError,
 	createMap,
 	createSet,
+	createStringObject,
+	createNumberObject,
 	createArray,
 	createObject,
 	createReference
@@ -116,6 +118,14 @@ function createString() {
 		string += String.fromCharCode(Math.floor(Math.random() * 58) + 64);
 	}
 	return string;
+}
+
+function createStringObject() {
+	return new String(createString());
+}
+
+function createNumberObject() {
+	return new Number(createNumber());
 }
 
 function createMap(depth = 0) {
