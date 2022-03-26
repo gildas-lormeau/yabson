@@ -72,6 +72,7 @@ export {
 	serializeRegExp,
 	serializeStringObject,
 	serializeNumberObject,
+	serializeSymbol,
 	parseValue,
 	parseObject,
 	parseArray,
@@ -106,6 +107,7 @@ export {
 	parseRegExp,
 	parseStringObject,
 	parseNumberObject,
+	parseSymbol,
 	testObject,
 	testArray,
 	testString,
@@ -139,7 +141,8 @@ export {
 	testError,
 	testRegExp,
 	testStringObject,
-	testNumberObject
+	testNumberObject,
+	testSymbol
 };
 
 function registerType(serialize, parse, test, type) {
