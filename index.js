@@ -1,12 +1,14 @@
 /* global TextEncoder, TextDecoder, BigInt64Array, BigUint64Array */
 
 const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
+const TYPE_REFERENCE = 0;
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 const types = new Array(256);
 let typeIndex = 0;
 
+registerType(serializeCircularReference, parseCircularReference, testCircularReference, TYPE_REFERENCE);
 registerType(serializeObject, parseObject, testObject);
 registerType(serializeArray, parseArray, testArray);
 registerType(serializeString, parseString, testString);
@@ -128,9 +130,36 @@ export {
 	testRegExp
 };
 
-function registerType(serialize, parse, test) {
-	typeIndex++;
-	types[types.length - typeIndex] = { serialize, parse, test };
+function registerType(serialize, parse, test, type) {
+	if (type === undefined) {
+		typeIndex++;
+		if (types.length - typeIndex) {
+			types[types.length - typeIndex] = { serialize, parse, test };
+		} else {
+			throw new Error("Reached maximum number of custom types");
+		}
+	} else {
+		types[type] = { serialize, parse, test };
+	}
+}
+
+class SerializerData {
+	constructor(chunkSize) {
+		this.stream = new WriteStream(chunkSize);
+		this.objects = [];
+	}
+
+	append(array) {
+		return this.stream.append(array);
+	}
+
+	flush() {
+		return this.stream.flush();
+	}
+
+	addObject(value) {
+		this.objects.push(testObject(value) && !testCircularReference(value, this) ? value : null);
+	}
 }
 
 class WriteStream {
@@ -168,18 +197,24 @@ class WriteStream {
 }
 
 function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
-	const data = new WriteStream(chunkSize);
+	const data = new SerializerData(chunkSize);
 	yield* serializeValue(data, value);
 	yield* data.flush();
 }
 
 function* serializeValue(data, value) {
-	const type = types.findIndex(({ test } = {}) => test && test(value));
+	const type = types.findIndex(({ test } = {}) => test && test(value, data));
+	data.addObject(value);
 	yield* data.append(new Uint8Array([type]));
 	const serialize = types[type].serialize;
 	if (serialize) {
 		yield* serialize(data, value);
 	}
+}
+
+function* serializeCircularReference(data, value) {
+	const index = data.objects.indexOf(value);
+	yield* serializeValue(data, index);
 }
 
 function* serializeObject(data, object) {
@@ -285,6 +320,54 @@ function* serializeRegExp(data, regExp) {
 	yield* serializeString(data, regExp.flags);
 }
 
+class ObjectWrapper {
+	set(value) {
+		if (testObject(value) && !testReference(value)) {
+			this.value = value;
+		}
+	}
+}
+
+class Reference {
+	constructor(index, data) {
+		this.index = index;
+		this.data = data;
+	}
+
+	getObject() {
+		return this.data.objects[this.index].value;
+	}
+}
+
+class ParserData {
+	constructor() {
+		this.stream = new ReadStream();
+		this.objects = [];
+		this.setters = [];
+	}
+
+	consume(size) {
+		return this.stream.consume(size);
+	}
+
+	createObjectWrapper() {
+		const wrapper = new ObjectWrapper();
+		this.objects.push(wrapper);
+		return wrapper;
+	}
+
+	addObjectSetter(functionArguments, setterFunction) {
+		this.setters.push({ functionArguments, setterFunction });
+	}
+
+	executeSetters() {
+		this.setters.forEach(({ functionArguments, setterFunction }) => {
+			const resolvedArguments = functionArguments.map(argument => testReference(argument) ? argument.getObject() : argument);
+			setterFunction(...resolvedArguments);
+		});
+	}
+}
+
 class ReadStream {
 	constructor() {
 		this.offset = 0;
@@ -315,14 +398,25 @@ function getParser() {
 }
 
 function* getParseGenerator() {
-	return yield* parseValue(new ReadStream());
+	const data = new ParserData();
+	const result = yield* parseValue(data);
+	data.executeSetters();
+	return result;
 }
 
 function* parseValue(data) {
 	const array = yield* data.consume(1);
 	const parserType = array[0];
 	const parse = types[parserType].parse;
+	const objectWrapper = data.createObjectWrapper();
 	const result = yield* parse(data);
+	objectWrapper.set(result);
+	return result;
+}
+
+function* parseCircularReference(data) {
+	const index = yield* parseValue(data);
+	const result = new Reference(index, data);
 	return result;
 }
 
@@ -332,7 +426,7 @@ function* parseObject(data) {
 	for (let indexKey = 0; indexKey < size; indexKey++) {
 		const key = yield* parseString(data);
 		const value = yield* parseValue(data);
-		object[key] = value;
+		data.addObjectSetter([value], value => object[key] = value);
 	}
 	return object;
 }
@@ -341,7 +435,8 @@ function* parseArray(data) {
 	const length = yield* parseValue(data);
 	const array = [];
 	for (let indexArray = 0; indexArray < length; indexArray++) {
-		array.push(yield* parseValue(data));
+		const value = yield* parseValue(data);
+		data.addObjectSetter([value], value => array.push(value));
 	}
 	return array;
 }
@@ -484,7 +579,7 @@ function* parseMap(data) {
 	for (let indexKey = 0; indexKey < size; indexKey++) {
 		const key = yield* parseValue(data);
 		const value = yield* parseValue(data);
-		map.set(key, value);
+		data.addObjectSetter([key, value], (key, value) => map.set(key, value));
 	}
 	return map;
 }
@@ -494,7 +589,7 @@ function* parseSet(data) {
 	const set = new Set();
 	for (let indexKey = 0; indexKey < size; indexKey++) {
 		const value = yield* parseValue(data);
-		set.add(value);
+		data.addObjectSetter([value], value => set.add(value));
 	}
 	return set;
 }
@@ -518,6 +613,14 @@ function* parseRegExp(data) {
 	const source = yield* parseString(data);
 	const flags = yield* parseString(data);
 	return new RegExp(source, flags);
+}
+
+function testCircularReference(value, data) {
+	return testObject(value) && data.objects.includes(value);
+}
+
+function testReference(value) {
+	return value instanceof Reference;
 }
 
 function testObject(value) {

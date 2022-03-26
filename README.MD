@@ -7,9 +7,8 @@ This library is designed to transfer large arbitrary amounts of data into
 chunks. The main goal is to provide a very simple and easily extensible API and
 implementation. This also illustrates pedagogically the interest of
 [iterators and generators](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Iterators_and_Generators)
-in JavaScript. Note that, like the JSON API, this library does not support
-circular references. The binary encoding is also determined by the endianness of
-the underlying hardware.
+in JavaScript. Note that the binary encoding is also determined by the
+endianness of the underlying hardware.
 
 ## Example
 
@@ -38,6 +37,7 @@ const object = {
   map: new Map([["key", "value"], [42, { value: "result" }]]),
   set: new Set([1, 2, 3]),
 };
+object.map.set(object.array, object);
 
 // `chunkSize` (optional) is the max. size in bytes of `chunk` in the for-of loop below
 const serializer = getSerializer(object, { chunkSize: 16 });
