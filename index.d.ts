@@ -29,7 +29,7 @@ export function parse(array: Uint8Array): any;
 
 export function serializeValue(data: SerializerData, value: any): Generator<Uint8Array, void, void>;
 export function serializeObject(data: SerializerData, object: object): Generator<Uint8Array, void, void>;
-export function serializeArray(data: SerializerData, array: Array): Generator<Uint8Array, void, void>;
+export function serializeArray(data: SerializerData, array: Array<any>): Generator<Uint8Array, void, void>;
 export function serializeString(data: SerializerData, string: string): Generator<Uint8Array, void, void>;
 export function serializeTypedArray(data: SerializerData, array: TypedArray): Generator<Uint8Array, void, void>;
 export function serializeNumber(data: SerializerData, number: number): Generator<Uint8Array, void, void>;
@@ -41,8 +41,8 @@ export function serializeInt16(data: SerializerData, number: number): Generator<
 export function serializeUint8(data: SerializerData, number: number): Generator<Uint8Array, void, void>;
 export function serializeInt8(data: SerializerData, number: number): Generator<Uint8Array, void, void>;
 export function serializeBoolean(data: SerializerData, boolean: boolean): Generator<Uint8Array, void, void>;
-export function serializeMap(data: SerializerData, map: Map): Generator<Uint8Array, void, void>;
-export function serializeSet(data: SerializerData, set: Set): Generator<Uint8Array, void, void>;
+export function serializeMap(data: SerializerData, map: Map<any, any>): Generator<Uint8Array, void, void>;
+export function serializeSet(data: SerializerData, set: Set<any>): Generator<Uint8Array, void, void>;
 export function serializeDate(data: SerializerData, date: Date): Generator<Uint8Array, void, void>;
 export function serializeError(data: SerializerData, error: Error): Generator<Uint8Array, void, void>;
 export function serializeRegExp(data: SerializerData, regExp: RegExp): Generator<Uint8Array, void, void>;
@@ -53,7 +53,7 @@ export function serializeSymbol(data: SerializerData, symbol: Symbol): Generator
 
 export function parseValue(data: ParserData): Generator<void, any, Uint8Array>;
 export function parseObject(data: ParserData): Generator<void, Object, Uint8Array>;
-export function parseArray(data: ParserData): Generator<void, Array, Uint8Array>;
+export function parseArray(data: ParserData): Generator<void, Array<any>, Uint8Array>;
 export function parseString(data: ParserData): Generator<void, string, Uint8Array>;
 export function parseBigUint64Array(data: ParserData): Generator<void, BigUint64Array, Uint8Array>;
 export function parseBigInt64Array(data: ParserData): Generator<void, BigInt64Array, Uint8Array>;
@@ -78,8 +78,8 @@ export function parseUndefined(): Generator<void, undefined, Uint8Array>;
 export function parseNull(): Generator<void, null, Uint8Array>;
 export function parseNaN(): Generator<void, number, Uint8Array>;
 export function parseBoolean(data: ParserData): Generator<void, boolean, Uint8Array>;
-export function parseMap(data: ParserData): Generator<void, Map, Uint8Array>;
-export function parseSet(data: ParserData): Generator<void, Set, Uint8Array>;
+export function parseMap(data: ParserData): Generator<void, Map<any, any>, Uint8Array>;
+export function parseSet(data: ParserData): Generator<void, Set<any>, Uint8Array>;
 export function parseDate(data: ParserData): Generator<void, Date, Uint8Array>;
 export function parseError(data: ParserData): Generator<void, Error, Uint8Array>;
 export function parseRegExp(data: ParserData): Generator<void, RegExp, Uint8Array>;
