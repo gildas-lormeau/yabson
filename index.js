@@ -48,6 +48,8 @@ export {
 	getParser,
 	registerType,
 	clone,
+	serialize,
+	parse,
 	serializeValue,
 	serializeObject,
 	serializeArray,
@@ -159,6 +161,24 @@ function clone(object, options) {
 	for (const chunk of serializer) {
 		result = parser.next(chunk);
 	}
+	return result.value;
+}
+
+function serialize(object, options) {
+	const serializer = getSerializer(object, options);
+	let result = new Uint8Array([]);
+	for (const chunk of serializer) {
+		const previousResult = result;
+		result = new Uint8Array(previousResult.length + chunk.length);
+		result.set(previousResult, 0);
+		result.set(chunk, previousResult.length);
+	}
+	return result;
+}
+
+function parse(array) {
+	const parser = getParser();
+	const result = parser.next(array);
 	return result.value;
 }
 
