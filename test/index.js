@@ -25,7 +25,8 @@ const createFunctions = [
 	createNumberObject,
 	createArray,
 	createObject,
-	createReference
+	createReference,
+	createSymbol
 ];
 
 Deno.test("Fuzzing tests should run without errors", () => {
@@ -109,6 +110,9 @@ function createArray(depth = 0) {
 	for (let index = 0; index < 16 + Math.floor(Math.random() * 16); index++) {
 		array.push(createValue(depth + 1));
 	}
+	for (let index = 0; index < Math.floor(Math.random() * 4); index++) {
+		array[createSymbol()] = createValue(depth + 1);
+	}
 	return array;
 }
 
@@ -152,6 +156,9 @@ function createObject(depth = 0) {
 	for (let index = 0; index < 16 + Math.floor(Math.random() * 16); index++) {
 		object[createString()] = createValue(depth + 1);
 	}
+	for (let index = 0; index < Math.floor(Math.random() * 4); index++) {
+		object[createSymbol()] = createValue(depth + 1);
+	}
 	return object;
 }
 
@@ -189,4 +196,8 @@ function createDate() {
 
 function createError() {
 	return new Error(createString());
+}
+
+function createSymbol() {
+	return Symbol(createString());
 }

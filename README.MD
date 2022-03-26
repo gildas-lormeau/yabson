@@ -29,6 +29,7 @@ const object = {
     42n,
     "string",
   ],
+  [Symbol("symbol")]: "symbol",
   typedArray: new Uint8Array([1, 2, 3]),
   misc: {
     date: new Date(),

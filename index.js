@@ -35,6 +35,7 @@ registerType(null, parseUndefined, testUndefined);
 registerType(null, parseNull, testNull);
 registerType(null, parseNaN, testNaN);
 registerType(serializeBoolean, parseBoolean, testBoolean);
+registerType(serializeSymbol, parseSymbol, testSymbol);
 registerType(serializeMap, parseMap, testMap);
 registerType(serializeSet, parseSet, testSet);
 registerType(serializeDate, parseDate, testDate);
@@ -197,7 +198,7 @@ class SerializerData {
 	}
 
 	addObject(value) {
-		this.objects.push(testObject(value) && !testCircularReference(value, this) ? value : null);
+		this.objects.push(testReferenceable(value) && !testCircularReference(value, this) ? value : undefined);
 	}
 }
 
@@ -248,6 +249,15 @@ function* serializeValue(data, value) {
 	const serialize = types[type].serialize;
 	if (serialize) {
 		yield* serialize(data, value);
+	}
+	yield* serializeSymbols(data, value);
+}
+
+function* serializeSymbols(data, value) {
+	if (testObject(value)) {
+		const ownPropertySymbols = Object.getOwnPropertySymbols(value);
+		const symbols = ownPropertySymbols.map(propertySymbol => [propertySymbol, value[propertySymbol]]);
+		yield* serializeArray(data, symbols);
 	}
 }
 
@@ -367,9 +377,13 @@ function* serializeNumberObject(data, number) {
 	yield* serializeNumber(data, Number(number));
 }
 
+function* serializeSymbol(data, symbol) {
+	yield* serializeString(data, symbol.description);
+}
+
 class ObjectWrapper {
 	set(value) {
-		if (testObject(value) && !testReference(value)) {
+		if (testReferenceable(value) && !testReference(value)) {
 			this.value = value;
 		}
 	}
@@ -457,8 +471,16 @@ function* parseValue(data) {
 	const parse = types[parserType].parse;
 	const objectWrapper = data.createObjectWrapper();
 	const result = yield* parse(data);
+	yield* parseSymbols(data, result);
 	objectWrapper.set(result);
 	return result;
+}
+
+function* parseSymbols(data, value) {
+	if (testObject(value)) {
+		const symbols = yield* parseArray(data);
+		data.addObjectSetter([symbols], symbols => symbols.forEach(([symbol, propertyValue]) => value[symbol] = propertyValue));
+	}
 }
 
 function* parseCircularReference(data) {
@@ -670,6 +692,11 @@ function* parseNumberObject(data) {
 	return new Number(yield* parseNumber(data));
 }
 
+function* parseSymbol(data) {
+	const description = yield* parseString(data);
+	return Symbol(description);
+}
+
 function testCircularReference(value, data) {
 	return testObject(value) && data.objects.includes(value);
 }
@@ -811,4 +838,12 @@ function testStringObject(value) {
 
 function testNumberObject(value) {
 	return value instanceof Number;
+}
+
+function testSymbol(value) {
+	return typeof value == "symbol";
+}
+
+function testReferenceable(value) {
+	return testObject(value) || testSymbol(value);
 }
