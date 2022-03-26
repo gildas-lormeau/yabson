@@ -37,6 +37,7 @@ const object = {
   map: new Map([["key", "value"], [42, { value: "result" }]]),
   set: new Set([1, 2, 3]),
 };
+// adds circular references
 object.map.set(object.array, object);
 
 // `chunkSize` (optional) is the max. size in bytes of `chunk` in the for-of loop below
