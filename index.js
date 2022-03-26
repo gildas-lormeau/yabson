@@ -767,6 +767,7 @@ function testInt8Array(value) {
 function testNumber(value) {
 	return typeof value == "number";
 }
+
 function testBigInt(value) {
 	return typeof value == "bigint";
 }
