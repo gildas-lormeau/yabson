@@ -2,7 +2,7 @@
 
 import { getSerializer, clone } from "./../index.js";
 
-const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
+const MAX_CHUNK_SIZE = 128 * 1024;
 const MAX_TESTS = 32;
 const MAX_DEPTH = 4;
 
@@ -40,9 +40,17 @@ function test() {
 	const copy = clone(object);
 	const serializerObject = getSerializer(object, { chunkSize: MAX_CHUNK_SIZE });
 	const serializerCopy = getSerializer(copy, { chunkSize: MAX_CHUNK_SIZE });
-	const serializedObject = serializerObject.next();
-	const serializedCopy = serializerCopy.next();
-	return JSON.stringify(Array.from(serializedObject.value)) == JSON.stringify(Array.from(serializedCopy.value));
+	let serializedObject, serializedCopy;
+	do {
+		serializedObject = serializerObject.next();
+		serializedCopy = serializerCopy.next();
+		if (!serializedObject.done &&
+			!serializedCopy.done &&
+			JSON.stringify(Array.from(serializedObject.value)) != JSON.stringify(Array.from(serializedCopy.value))) {
+			return false;
+		}
+	} while (!serializedObject.done && !serializedCopy.done);
+	return true;
 }
 
 function createValue(depth = 0) {
