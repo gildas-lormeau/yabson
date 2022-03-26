@@ -36,8 +36,8 @@ const object = {
   },
   map: new Map([["key", "value"], [42, { value: "result" }]]),
   set: new Set([1, 2, 3]),
-	stringObject: new String("123"),
-	numberObject: new Number(123),
+  stringObject: new String("abc"),
+  numberObject: new Number(123),
 };
 // adds a circular reference
 object.map.set(object.array, object);
