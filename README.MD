@@ -27,6 +27,7 @@ const object = {
     null,
     NaN,
     42n,
+    "string"
   ],
   typedArray: new Uint8Array([1, 2, 3]),
   misc: {
