@@ -39,7 +39,7 @@ const object = {
 	stringObject: new String("123"),
 	numberObject: new Number(123),
 };
-// adds circular reference
+// adds a circular reference
 object.map.set(object.array, object);
 
 // `chunkSize` (optional) is the max. size in bytes of `chunk` in the for-of loop below
