@@ -9,7 +9,7 @@ interface SerializerOptions {
 
 interface SerializerData {
     append(array: Uint8Array): Generator<Uint8Array, void, void>;
-    flush(): void;
+    flush(): Generator<void, void, void>;
     addObject(value: any): void;
 }
 
