@@ -43,6 +43,7 @@ registerType(serializeError, parseError, testError);
 registerType(serializeRegExp, parseRegExp, testRegExp);
 registerType(serializeStringObject, parseStringObject, testStringObject);
 registerType(serializeNumberObject, parseNumberObject, testNumberObject);
+registerType(serializeBooleanObject, parseBooleanObject, testBooleanObject);
 
 export {
 	getSerializer,
@@ -380,6 +381,10 @@ function* serializeNumberObject(data, number) {
 	yield* serializeNumber(data, Number(number));
 }
 
+function* serializeBooleanObject(data, boolean) {
+	yield* serializeBoolean(data, Boolean(boolean));
+}
+
 function* serializeSymbol(data, symbol) {
 	yield* serializeString(data, symbol.description);
 }
@@ -695,6 +700,10 @@ function* parseNumberObject(data) {
 	return new Number(yield* parseNumber(data));
 }
 
+function* parseBooleanObject(data) {
+	return new Boolean(yield* parseBoolean(data));
+}
+
 function* parseSymbol(data) {
 	const description = yield* parseString(data);
 	return Symbol(description);
@@ -842,6 +851,10 @@ function testStringObject(value) {
 
 function testNumberObject(value) {
 	return value instanceof Number;
+}
+
+function testBooleanObject(value) {
+	return value instanceof Boolean;
 }
 
 function testSymbol(value) {

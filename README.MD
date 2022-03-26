@@ -40,6 +40,7 @@ const object = {
   set: new Set([1, 2, 3]),
   stringObject: new String("abc"),
   numberObject: new Number(123),
+  booleanObject: new Boolean(true),
 };
 // adds a circular reference
 object.map.set(object.array, object);

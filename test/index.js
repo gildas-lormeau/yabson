@@ -23,6 +23,7 @@ const createFunctions = [
 	createSet,
 	createStringObject,
 	createNumberObject,
+	createBooleanObject,
 	createArray,
 	createObject,
 	createReference,
@@ -130,6 +131,10 @@ function createStringObject() {
 
 function createNumberObject() {
 	return new Number(createNumber());
+}
+
+function createBooleanObject() {
+	return new Boolean(createBoolean());
 }
 
 function createMap(depth = 0) {
