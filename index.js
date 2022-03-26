@@ -45,6 +45,7 @@ export {
 	getSerializer,
 	getParser,
 	registerType,
+	clone,
 	serializeValue,
 	serializeObject,
 	serializeArray,
@@ -141,6 +142,16 @@ function registerType(serialize, parse, test, type) {
 	} else {
 		types[type] = { serialize, parse, test };
 	}
+}
+
+function clone(object, options) {
+	const serializer = getSerializer(object, options);
+	const parser = getParser();
+	let result;
+	for (const chunk of serializer) {
+		result = parser.next(chunk);
+	}
+	return result.value;
 }
 
 class SerializerData {
