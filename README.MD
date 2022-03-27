@@ -14,8 +14,8 @@ the underlying hardware.
 
 ```js
 import { getParser, getSerializer } from "yabson";
-// Deno: import { getParser, getSerializer } from "https://deno.land/x/yabson@v1.0.3";
-// Browser: import { getParser, getSerializer } from "https://unpkg.com/yabson@1.0.3";
+// Deno: import { getParser, getSerializer } from "https://deno.land/x/yabson@v1.0.8";
+// Browser: import { getParser, getSerializer } from "https://unpkg.com/yabson@1.0.8";
 
 // `object` is the data to serialize
 const object = {
