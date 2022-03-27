@@ -221,8 +221,10 @@ class WriteStream {
 			yield* this.append(pending);
 			yield* this.append(array);
 		} else if (this.offset + array.length > this.value.length) {
-			this.value.set(array.subarray(0, this.value.length - this.offset), this.offset);
-			this.pending = array.subarray(this.value.length - this.offset);
+			const leftArray = array.subarray(0, this.value.length - this.offset);
+			const rightArray = array.subarray(this.value.length - this.offset);
+			yield* this.append(leftArray);
+			this.pending = rightArray;
 			yield this.value;
 		} else {
 			this.value.set(array, this.offset);
