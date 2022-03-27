@@ -2,7 +2,7 @@
 
 import { getSerializer, clone } from "./../index.js";
 
-const MAX_CHUNK_SIZE = 128 * 1024;
+const MAX_CHUNK_SIZE = 16 * 1024;
 const MAX_TESTS = 32;
 const MAX_DEPTH = 4;
 
