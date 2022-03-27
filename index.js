@@ -439,7 +439,9 @@ class ReadStream {
 		if (this.offset + size > this.value.length) {
 			const pending = this.value.subarray(this.offset, this.value.length);
 			const value = yield;
-			this.value = new Uint8Array(pending.length + value.length);
+			if (pending.length + value.length != this.value.length) {
+				this.value = new Uint8Array(pending.length + value.length);
+			}
 			this.value.set(pending);
 			this.value.set(value, pending.length);
 			this.offset = 0;
