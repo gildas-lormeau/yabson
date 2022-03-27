@@ -213,19 +213,12 @@ class WriteStream {
 	}
 
 	*append(array) {
-		if (this.pending) {
-			const pending = this.pending;
-			this.pending = null;
-			this.offset = 0;
-			this.value = new Uint8Array(this.value.length);
-			yield* this.append(pending);
-			yield* this.append(array);
-		} else if (this.offset + array.length > this.value.length) {
-			const leftArray = array.subarray(0, this.value.length - this.offset);
-			const rightArray = array.subarray(this.value.length - this.offset);
-			yield* this.append(leftArray);
-			this.pending = rightArray;
+		if (this.offset + array.length > this.value.length) {
+			const offset = this.value.length - this.offset;
+			yield* this.append(array.subarray(0, offset));
 			yield this.value;
+			this.offset = 0;
+			yield* this.append(array.subarray(offset));
 		} else {
 			this.value.set(array, this.offset);
 			this.offset += array.length;
@@ -233,9 +226,6 @@ class WriteStream {
 	}
 
 	*flush() {
-		if (this.pending) {
-			yield* this.append(new Uint8Array([]));
-		}
 		if (this.offset) {
 			yield this.value.subarray(0, this.offset);
 		}
