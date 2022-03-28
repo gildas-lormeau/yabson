@@ -73,6 +73,7 @@ export {
 	serializeRegExp,
 	serializeStringObject,
 	serializeNumberObject,
+	serializeBooleanObject,
 	serializeSymbol,
 	parseValue,
 	parseObject,
@@ -108,6 +109,7 @@ export {
 	parseRegExp,
 	parseStringObject,
 	parseNumberObject,
+	parseBooleanObject,
 	parseSymbol,
 	testObject,
 	testArray,
@@ -143,6 +145,7 @@ export {
 	testRegExp,
 	testStringObject,
 	testNumberObject,
+	testBooleanObject,
 	testSymbol
 };
 
