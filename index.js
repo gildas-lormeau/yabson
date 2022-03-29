@@ -406,20 +406,19 @@ class ParserData {
 		return this.stream.consume(size);
 	}
 
-	getValueId() {
+	getObjectId() {
 		const objectIndex = this.objects.length;
 		this.objects.push(undefined);
 		return objectIndex;
 	}
 
-	setValue(objectIndex, value) {
+	resolveObject(objectId, value) {
 		if (testReferenceable(value) && !testReference(value)) {
-			this.objects[objectIndex] = value;
+			this.objects[objectId] = value;
 		}
-
 	}
 
-	addObjectSetter(functionArguments, setterFunction) {
+	setObject(functionArguments, setterFunction) {
 		this.setters.push({ functionArguments, setterFunction });
 	}
 
@@ -473,17 +472,17 @@ function* parseValue(data) {
 	const array = yield* data.consume(1);
 	const parserType = array[0];
 	const parse = types[parserType].parse;
-	const valueId = data.getValueId();
+	const valueId = data.getObjectId();
 	const result = yield* parse(data);
 	yield* parseSymbols(data, result);
-	data.setValue(valueId, result);
+	data.resolveObject(valueId, result);
 	return result;
 }
 
 function* parseSymbols(data, value) {
 	if (testObject(value)) {
 		const symbols = yield* parseArray(data);
-		data.addObjectSetter([symbols], symbols => symbols.forEach(([symbol, propertyValue]) => value[symbol] = propertyValue));
+		data.setObject([symbols], symbols => symbols.forEach(([symbol, propertyValue]) => value[symbol] = propertyValue));
 	}
 }
 
@@ -499,7 +498,7 @@ function* parseObject(data) {
 	for (let indexKey = 0; indexKey < size; indexKey++) {
 		const key = yield* parseString(data);
 		const value = yield* parseValue(data);
-		data.addObjectSetter([value], value => object[key] = value);
+		data.setObject([value], value => object[key] = value);
 	}
 	return object;
 }
@@ -509,7 +508,7 @@ function* parseArray(data) {
 	const array = [];
 	for (let indexArray = 0; indexArray < length; indexArray++) {
 		const value = yield* parseValue(data);
-		data.addObjectSetter([value], value => array.push(value));
+		data.setObject([value], value => array.push(value));
 	}
 	return array;
 }
@@ -652,7 +651,7 @@ function* parseMap(data) {
 	for (let indexKey = 0; indexKey < size; indexKey++) {
 		const key = yield* parseValue(data);
 		const value = yield* parseValue(data);
-		data.addObjectSetter([key, value], (key, value) => map.set(key, value));
+		data.setObject([key, value], (key, value) => map.set(key, value));
 	}
 	return map;
 }
@@ -662,7 +661,7 @@ function* parseSet(data) {
 	const set = new Set();
 	for (let indexKey = 0; indexKey < size; indexKey++) {
 		const value = yield* parseValue(data);
-		data.addObjectSetter([value], value => set.add(value));
+		data.setObject([value], value => set.add(value));
 	}
 	return set;
 }
