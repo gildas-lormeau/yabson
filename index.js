@@ -384,14 +384,6 @@ function* serializeSymbol(data, symbol) {
 	yield* serializeString(data, symbol.description);
 }
 
-class ObjectWrapper {
-	set(value) {
-		if (testReferenceable(value) && !testReference(value)) {
-			this.value = value;
-		}
-	}
-}
-
 class Reference {
 	constructor(index, data) {
 		this.index = index;
@@ -399,7 +391,7 @@ class Reference {
 	}
 
 	getObject() {
-		return this.data.objects[this.index].value;
+		return this.data.objects[this.index];
 	}
 }
 
@@ -414,10 +406,17 @@ class ParserData {
 		return this.stream.consume(size);
 	}
 
-	createObjectWrapper() {
-		const wrapper = new ObjectWrapper();
-		this.objects.push(wrapper);
-		return wrapper;
+	getValueId() {
+		const objectIndex = this.objects.length;
+		this.objects.push(undefined);
+		return objectIndex;
+	}
+
+	setValue(objectIndex, value) {
+		if (testReferenceable(value) && !testReference(value)) {
+			this.objects[objectIndex] = value;
+		}
+
 	}
 
 	addObjectSetter(functionArguments, setterFunction) {
@@ -474,10 +473,10 @@ function* parseValue(data) {
 	const array = yield* data.consume(1);
 	const parserType = array[0];
 	const parse = types[parserType].parse;
-	const objectWrapper = data.createObjectWrapper();
+	const valueId = data.getValueId();
 	const result = yield* parse(data);
 	yield* parseSymbols(data, result);
-	objectWrapper.set(result);
+	data.setValue(valueId, result);
 	return result;
 }
 
