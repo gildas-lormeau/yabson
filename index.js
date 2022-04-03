@@ -2,6 +2,7 @@
 
 const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
 const TYPE_REFERENCE = 0;
+const SPECIAL_TYPES = [TYPE_REFERENCE];
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -152,7 +153,7 @@ export {
 function registerType(serialize, parse, test, type) {
 	if (type === undefined) {
 		typeIndex++;
-		if (types.length - typeIndex) {
+		if (types.length - typeIndex >= SPECIAL_TYPES.length) {
 			types[types.length - typeIndex] = { serialize, parse, test };
 		} else {
 			throw new Error("Reached maximum number of custom types");
