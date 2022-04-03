@@ -2,7 +2,9 @@
 
 const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
 const TYPE_REFERENCE = 0;
+const TYPE_EMPTY_SLOT = 1;
 const SPECIAL_TYPES = [TYPE_REFERENCE];
+const EMPTY_SLOT_VALUE = Symbol();
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -12,6 +14,7 @@ let typeIndex = 0;
 registerType(serializeCircularReference, parseCircularReference, testCircularReference, TYPE_REFERENCE);
 registerType(serializeObject, parseObject, testObject);
 registerType(serializeArray, parseArray, testArray);
+registerType(null, parseEmptySlot, testEmptySlot, TYPE_EMPTY_SLOT);
 registerType(serializeString, parseString, testString);
 registerType(serializeTypedArray, parseBigUint64Array, testBigUint64Array);
 registerType(serializeTypedArray, parseBigInt64Array, testBigInt64Array);
@@ -277,8 +280,9 @@ function* serializeObject(data, object) {
 
 function* serializeArray(data, array) {
 	yield* serializeValue(data, array.length);
-	for (const value of array) {
-		yield* serializeValue(data, value);
+	const notEmptyIndexes = Object.keys(array).map(Number);
+	for (const [indexArray, value] of array.entries()) {
+		yield* serializeValue(data, notEmptyIndexes.includes(indexArray) ? value : EMPTY_SLOT_VALUE);
 	}
 }
 
@@ -509,9 +513,16 @@ function* parseArray(data) {
 	const array = [];
 	for (let indexArray = 0; indexArray < length; indexArray++) {
 		const value = yield* parseValue(data);
-		data.setObject([value], value => array.push(value));
+		if (!testEmptySlot(value)) {
+			data.setObject([value], value => array[indexArray] = value);
+		}
 	}
 	return array;
+}
+
+// eslint-disable-next-line require-yield
+function* parseEmptySlot() {
+	return EMPTY_SLOT_VALUE;
 }
 
 function* parseString(data) {
@@ -719,6 +730,10 @@ function testObject(value) {
 
 function testArray(value) {
 	return typeof value.length == "number";
+}
+
+function testEmptySlot(value) {
+	return value === EMPTY_SLOT_VALUE;
 }
 
 function testString(value) {

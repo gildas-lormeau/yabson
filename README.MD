@@ -43,6 +43,8 @@ const object = {
   numberObject: new Number(123),
   booleanObject: new Boolean(true),
 };
+// creates empty slots `object.array`
+object.array[12] = 12;
 // adds a circular reference
 object.map.set(object.array, object);
 

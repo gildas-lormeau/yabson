@@ -109,7 +109,9 @@ function createArray(depth = 0) {
 	const array = [];
 	objects.add(array);
 	for (let index = 0; index < 16 + Math.floor(Math.random() * 16); index++) {
-		array.push(createValue(depth + 1));
+		if (Math.random() > .1) {
+			array[index] = createValue(depth + 1);
+		}
 	}
 	for (let index = 0; index < Math.floor(Math.random() * 4); index++) {
 		array[createSymbol()] = createValue(depth + 1);
