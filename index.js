@@ -253,7 +253,10 @@ function* serializeValue(data, value) {
 	if (serialize) {
 		yield* serialize(data, value);
 	}
-	yield* serializeSymbols(data, value);
+	if (type != TYPE_REFERENCE) {
+		yield* serializeSymbols(data, value);
+		yield* serializeOwnProperties(data, value);
+	}
 }
 
 function* serializeSymbols(data, value) {
@@ -264,6 +267,16 @@ function* serializeSymbols(data, value) {
 	}
 }
 
+function* serializeOwnProperties(data, value) {
+	if (testObjectInheritance(value)) {
+		let entries = Object.entries(value);
+		if (testArray(value)) {
+			entries = entries.filter(([key]) => !testInteger(Number(key)));
+		}
+		yield* serializeEntries(data, entries);
+	}
+}
+
 function* serializeCircularReference(data, value) {
 	const index = data.objects.indexOf(value);
 	yield* serializeValue(data, index);
@@ -271,11 +284,7 @@ function* serializeCircularReference(data, value) {
 
 function* serializeObject(data, object) {
 	const entries = Object.entries(object);
-	yield* serializeValue(data, entries.length);
-	for (const [key, value] of entries) {
-		yield* serializeString(data, key);
-		yield* serializeValue(data, value);
-	}
+	yield* serializeEntries(data, entries);
 }
 
 function* serializeArray(data, array) {
@@ -283,6 +292,14 @@ function* serializeArray(data, array) {
 	const notEmptyIndexes = Object.keys(array).filter(key => testInteger(Number(key))).map(key => Number(key));
 	for (const [indexArray, value] of array.entries()) {
 		yield* serializeValue(data, notEmptyIndexes.includes(indexArray) ? value : EMPTY_SLOT_VALUE);
+	}
+}
+
+function* serializeEntries(data, entries) {
+	yield* serializeValue(data, entries.length);
+	for (const [key, value] of entries) {
+		yield* serializeString(data, key);
+		yield* serializeValue(data, value);
 	}
 }
 
@@ -479,7 +496,10 @@ function* parseValue(data) {
 	const parse = types[parserType].parse;
 	const valueId = data.getObjectId();
 	const result = yield* parse(data);
-	yield* parseSymbols(data, result);
+	if (parserType != TYPE_REFERENCE) {
+		yield* parseSymbols(data, result);
+		yield* parseOwnProperties(data, result);
+	}
 	data.resolveObject(valueId, result);
 	return result;
 }
@@ -491,6 +511,12 @@ function* parseSymbols(data, value) {
 	}
 }
 
+function* parseOwnProperties(data, value) {
+	if (testObjectInheritance(value)) {
+		yield* parseEntries(data, value);
+	}
+}
+
 function* parseCircularReference(data) {
 	const index = yield* parseValue(data);
 	const result = new Reference(index, data);
@@ -498,13 +524,8 @@ function* parseCircularReference(data) {
 }
 
 function* parseObject(data) {
-	const size = yield* parseValue(data);
 	const object = {};
-	for (let indexKey = 0; indexKey < size; indexKey++) {
-		const key = yield* parseString(data);
-		const value = yield* parseValue(data);
-		data.setObject([value], value => object[key] = value);
-	}
+	yield* parseEntries(data, object);
 	return object;
 }
 
@@ -518,6 +539,15 @@ function* parseArray(data) {
 		}
 	}
 	return array;
+}
+
+function* parseEntries(data, object) {
+	const size = yield* parseValue(data);
+	for (let indexKey = 0; indexKey < size; indexKey++) {
+		const key = yield* parseString(data);
+		const value = yield* parseValue(data);
+		data.setObject([value], value => object[key] = value);
+	}
 }
 
 // eslint-disable-next-line require-yield
@@ -874,4 +904,8 @@ function testSymbol(value) {
 
 function testReferenceable(value) {
 	return testObject(value) || testSymbol(value);
+}
+
+function testObjectInheritance(value) {
+	return testObject(value) && Object.getPrototypeOf(value).constructor != Object;
 }

@@ -47,6 +47,8 @@ const object = {
 object.array[12] = 12;
 // adds a circular reference
 object.map.set(object.array, object);
+// adds a property to an object
+object.numberObject.myProperty = "propertyValue";
 
 // `chunkSize` (optional) is the max. size in bytes of `chunk` in the for-of loop below
 const serializer = getSerializer(object, { chunkSize: 16 });
