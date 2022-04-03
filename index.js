@@ -280,7 +280,7 @@ function* serializeObject(data, object) {
 
 function* serializeArray(data, array) {
 	yield* serializeValue(data, array.length);
-	const notEmptyIndexes = Object.keys(array).map(Number);
+	const notEmptyIndexes = Object.keys(array).filter(key => testInteger(Number(key))).map(key => Number(key));
 	for (const [indexArray, value] of array.entries()) {
 		yield* serializeValue(data, notEmptyIndexes.includes(indexArray) ? value : EMPTY_SLOT_VALUE);
 	}
