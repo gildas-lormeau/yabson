@@ -390,15 +390,15 @@ function* serializeRegExp(data, regExp) {
 }
 
 function* serializeStringObject(data, string) {
-	yield* serializeString(data, string.toString());
+	yield* serializeString(data, string.valueOf());
 }
 
 function* serializeNumberObject(data, number) {
-	yield* serializeNumber(data, Number(number));
+	yield* serializeNumber(data, number.valueOf());
 }
 
 function* serializeBooleanObject(data, boolean) {
-	yield* serializeBoolean(data, Boolean(boolean));
+	yield* serializeBoolean(data, boolean.valueOf());
 }
 
 function* serializeSymbol(data, symbol) {
