@@ -1,6 +1,6 @@
 /* global TextEncoder, TextDecoder, BigInt64Array, BigUint64Array */
 
-const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
+const DEFAULT_CHUNK_SIZE = 8 * 1024 * 1024;
 const TYPE_REFERENCE = 0;
 const SPECIAL_TYPES = [TYPE_REFERENCE];
 const EMPTY_SLOT_VALUE = Symbol();
@@ -238,7 +238,7 @@ class WriteStream {
 	}
 }
 
-function* getSerializer(value, { chunkSize = MAX_CHUNK_SIZE } = {}) {
+function* getSerializer(value, { chunkSize = DEFAULT_CHUNK_SIZE } = {}) {
 	const data = new SerializerData(chunkSize);
 	yield* serializeValue(data, value);
 	yield* data.flush();
