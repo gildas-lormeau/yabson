@@ -379,7 +379,6 @@ function* serializeDate(data, date) {
 }
 
 function* serializeError(data, error) {
-	yield* serializeString(data, error.name);
 	yield* serializeString(data, error.message);
 	yield* serializeString(data, error.stack);
 }
@@ -713,11 +712,9 @@ function* parseDate(data) {
 }
 
 function* parseError(data) {
-	const name = yield* parseString(data);
 	const message = yield* parseString(data);
 	const stack = yield* parseString(data);
 	const error = new Error(message);
-	error.name = name;
 	error.stack = stack;
 	return error;
 }
