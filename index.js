@@ -843,7 +843,7 @@ function testInt8(value) {
 }
 
 function testInteger(value) {
-	return testNumber(value) && value == Number.parseInt(value, 10);
+	return testNumber(value) && Number.isInteger(value);
 }
 
 function testUndefined(value) {
