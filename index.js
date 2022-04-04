@@ -2,7 +2,6 @@
 
 const MAX_CHUNK_SIZE = 8 * 1024 * 1024;
 const TYPE_REFERENCE = 0;
-const TYPE_EMPTY_SLOT = 1;
 const SPECIAL_TYPES = [TYPE_REFERENCE];
 const EMPTY_SLOT_VALUE = Symbol();
 
@@ -14,7 +13,6 @@ let typeIndex = 0;
 registerType(serializeCircularReference, parseCircularReference, testCircularReference, TYPE_REFERENCE);
 registerType(serializeObject, parseObject, testObject);
 registerType(serializeArray, parseArray, testArray);
-registerType(null, parseEmptySlot, testEmptySlot, TYPE_EMPTY_SLOT);
 registerType(serializeString, parseString, testString);
 registerType(serializeTypedArray, parseBigUint64Array, testBigUint64Array);
 registerType(serializeTypedArray, parseBigInt64Array, testBigInt64Array);
@@ -40,6 +38,7 @@ registerType(null, parseNull, testNull);
 registerType(null, parseNaN, testNaN);
 registerType(serializeBoolean, parseBoolean, testBoolean);
 registerType(serializeSymbol, parseSymbol, testSymbol);
+registerType(null, parseEmptySlot, testEmptySlot);
 registerType(serializeMap, parseMap, testMap);
 registerType(serializeSet, parseSet, testSet);
 registerType(serializeDate, parseDate, testDate);
