@@ -1,7 +1,7 @@
 ## YaBSON
 
-Schemaless binary-encoded serialization of JavaScript objects with generator-based parser
-and serializer
+Schemaless binary-encoded serialization of JavaScript objects with
+generator-based parser and serializer
 
 This library is designed to transfer large arbitrary amounts of data into
 chunks. The main goal is to provide a very simple and easily extensible API and
