@@ -11,7 +11,7 @@ const types = new Array(256);
 let typeIndex = 0;
 
 registerType(serializeCircularReference, parseCircularReference, testCircularReference, TYPE_REFERENCE);
-registerType(serializeObject, parseObject, testObject);
+registerType(null, parseObject, testObject);
 registerType(serializeArray, parseArray, testArray);
 registerType(serializeString, parseString, testString);
 registerType(serializeTypedArray, parseBigUint64Array, testBigUint64Array);
@@ -56,7 +56,6 @@ export {
 	serialize,
 	parse,
 	serializeValue,
-	serializeObject,
 	serializeArray,
 	serializeString,
 	serializeTypedArray,
@@ -252,38 +251,29 @@ function* serializeValue(data, value) {
 	if (serialize) {
 		yield* serialize(data, value);
 	}
-	if (type != TYPE_REFERENCE) {
+	if (type != TYPE_REFERENCE && testObject(value)) {
 		yield* serializeSymbols(data, value);
 		yield* serializeOwnProperties(data, value);
 	}
 }
 
 function* serializeSymbols(data, value) {
-	if (testObject(value)) {
-		const ownPropertySymbols = Object.getOwnPropertySymbols(value);
-		const symbols = ownPropertySymbols.map(propertySymbol => [propertySymbol, value[propertySymbol]]);
-		yield* serializeArray(data, symbols);
-	}
+	const ownPropertySymbols = Object.getOwnPropertySymbols(value);
+	const symbols = ownPropertySymbols.map(propertySymbol => [propertySymbol, value[propertySymbol]]);
+	yield* serializeArray(data, symbols);
 }
 
 function* serializeOwnProperties(data, value) {
-	if (testObjectInheritance(value)) {
-		let entries = Object.entries(value);
-		if (testArray(value)) {
-			entries = entries.filter(([key]) => !testInteger(Number(key)));
-		}
-		yield* serializeEntries(data, entries);
+	let entries = Object.entries(value);
+	if (testArray(value)) {
+		entries = entries.filter(([key]) => !testInteger(Number(key)));
 	}
+	yield* serializeEntries(data, entries);
 }
 
 function* serializeCircularReference(data, value) {
 	const index = data.objects.indexOf(value);
 	yield* serializeValue(data, index);
-}
-
-function* serializeObject(data, object) {
-	const entries = Object.entries(object);
-	yield* serializeEntries(data, entries);
 }
 
 function* serializeArray(data, array) {
@@ -494,7 +484,7 @@ function* parseValue(data) {
 	const parse = types[parserType].parse;
 	const valueId = data.getObjectId();
 	const result = yield* parse(data);
-	if (parserType != TYPE_REFERENCE) {
+	if (parserType != TYPE_REFERENCE && testObject(result)) {
 		yield* parseSymbols(data, result);
 		yield* parseOwnProperties(data, result);
 	}
@@ -503,16 +493,12 @@ function* parseValue(data) {
 }
 
 function* parseSymbols(data, value) {
-	if (testObject(value)) {
-		const symbols = yield* parseArray(data);
-		data.setObject([symbols], symbols => symbols.forEach(([symbol, propertyValue]) => value[symbol] = propertyValue));
-	}
+	const symbols = yield* parseArray(data);
+	data.setObject([symbols], symbols => symbols.forEach(([symbol, propertyValue]) => value[symbol] = propertyValue));
 }
 
 function* parseOwnProperties(data, value) {
-	if (testObjectInheritance(value)) {
-		yield* parseEntries(data, value);
-	}
+	yield* parseEntries(data, value);
 }
 
 function* parseCircularReference(data) {
@@ -521,10 +507,9 @@ function* parseCircularReference(data) {
 	return result;
 }
 
-function* parseObject(data) {
-	const object = {};
-	yield* parseEntries(data, object);
-	return object;
+// eslint-disable-next-line require-yield
+function* parseObject() {
+	return {};
 }
 
 function* parseArray(data) {
@@ -900,8 +885,4 @@ function testSymbol(value) {
 
 function testReferenceable(value) {
 	return testObject(value) || testSymbol(value);
-}
-
-function testObjectInheritance(value) {
-	return testObject(value) && Object.getPrototypeOf(value).constructor != Object;
 }
