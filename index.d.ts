@@ -32,6 +32,7 @@ export function serializeObject(data: SerializerData, object: object): Generator
 export function serializeArray(data: SerializerData, array: Array<any>): Generator<Uint8Array, void, void>;
 export function serializeString(data: SerializerData, string: string): Generator<Uint8Array, void, void>;
 export function serializeTypedArray(data: SerializerData, array: TypedArray): Generator<Uint8Array, void, void>;
+export function serializeArrayBuffer(data: SerializerData, array: ArrayBuffer): Generator<Uint8Array, void, void>;
 export function serializeNumber(data: SerializerData, number: number): Generator<Uint8Array, void, void>;
 export function serializeBigInt(data: SerializerData, number: bigint): Generator<Uint8Array, void, void>;
 export function serializeUint32(data: SerializerData, number: number): Generator<Uint8Array, void, void>;
@@ -74,6 +75,7 @@ export function parseUint16(data: ParserData): Generator<void, number, Uint8Arra
 export function parseInt16(data: ParserData): Generator<void, number, Uint8Array>;
 export function parseUint8(data: ParserData): Generator<void, number, Uint8Array>;
 export function parseInt8(data: ParserData): Generator<void, number, Uint8Array>;
+export function parseArrayBuffer(data: ParserData): Generator<void, number, ArrayBuffer>;
 export function parseUndefined(): Generator<void, undefined, Uint8Array>;
 export function parseNull(): Generator<void, null, Uint8Array>;
 export function parseNaN(): Generator<void, number, Uint8Array>;
@@ -110,6 +112,7 @@ export function testUint16(value: any): boolean;
 export function testInt16(value: any): boolean;
 export function testUint8(value: any): boolean;
 export function testInt8(value: any): boolean;
+export function testArrayBuffer(value: any): boolean;
 export function testInteger(value: any): boolean;
 export function testUndefined(value: any): boolean;
 export function testNull(value: any): boolean;

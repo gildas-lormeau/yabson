@@ -3,7 +3,7 @@
   "description": "Binary-encoded serialization of JavaScript objects with generator-based parser and serializer",
   "author": "Gildas Lormeau",
   "license": "MIT",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "type": "module",
   "keywords": [
     "serialization",

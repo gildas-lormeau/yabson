@@ -1,7 +1,7 @@
 ## YaBSON
 
-Schemaless binary-encoded serialization of JavaScript data with
-generator-based parser and serializer
+Schemaless binary-encoded serialization of JavaScript data with generator-based
+parser and serializer
 
 This library is designed to transfer large arbitrary amounts of data into
 chunks. The main goal is to provide a very simple and easily extensible API and
@@ -42,6 +42,7 @@ const object = {
   stringObject: new String("abc"),
   numberObject: new Number(123),
   booleanObject: new Boolean(true),
+  arrayBuffer: new Uint16Array([1, 2, 3]).buffer,
 };
 // creates empty slots in `object.array`
 object.array[12] = 12;
@@ -63,7 +64,8 @@ for (const chunk of serializer) {
 // displays a deep clone of `object`
 console.log(result.value);
 ```
-Test it on JSFiddle: https://jsfiddle.net/xpzsm19g
+
+Test it on JSFiddle: https://jsfiddle.net/np4581x2
 
 ## Example with a custom type
 

@@ -15,6 +15,7 @@ const createFunctions = [
 	createNaN,
 	createString,
 	createTypedArray,
+	createArrayBuffer,
 	createBigInt,
 	createRegExp,
 	createDate,
@@ -191,6 +192,14 @@ function createTypedArray() {
 		case 10: return new Uint8Array(array.buffer);
 		case 11: return new Int8Array(array.buffer);
 	}
+}
+
+function createArrayBuffer() {
+	const array = new Uint8Array(Math.floor(Math.random() * 4) * 8);
+	for (let indexArray = 0; indexArray < array.length; indexArray++) {
+		array[indexArray] = Math.floor(Math.random() * 256);
+	}
+	return array.buffer;
 }
 
 function createRegExp() {
