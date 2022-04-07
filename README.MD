@@ -1,6 +1,6 @@
 ## YaBSON
 
-Schemaless binary-encoded serialization of JavaScript objects with
+Schemaless binary-encoded serialization of JavaScript data with
 generator-based parser and serializer
 
 This library is designed to transfer large arbitrary amounts of data into
@@ -63,6 +63,7 @@ for (const chunk of serializer) {
 // displays a deep clone of `object`
 console.log(result.value);
 ```
+Test it on JSFiddle: https://jsfiddle.net/xpzsm19g
 
 ## Example with a custom type
 
