@@ -283,8 +283,14 @@ function* serializeCircularReference(data, value) {
 function* serializeArray(data, array) {
 	yield* serializeValue(data, array.length);
 	const notEmptyIndexes = Object.keys(array).filter(key => testInteger(Number(key))).map(key => Number(key));
+	let indexNotEmptyIndexes = 0, currentNotEmptyIndex = notEmptyIndexes[indexNotEmptyIndexes];
 	for (const [indexArray, value] of array.entries()) {
-		yield* serializeValue(data, notEmptyIndexes.includes(indexArray) ? value : EMPTY_SLOT_VALUE);
+		if (currentNotEmptyIndex == indexArray) {
+			currentNotEmptyIndex = notEmptyIndexes[++indexNotEmptyIndexes];
+			yield* serializeValue(data, value);
+		} else {
+			yield* serializeValue(data, EMPTY_SLOT_VALUE);
+		}
 	}
 }
 
@@ -523,7 +529,7 @@ function* parseObject() {
 
 function* parseArray(data) {
 	const length = yield* parseValue(data);
-	const array = [];
+	const array = new Array(length);
 	for (let indexArray = 0; indexArray < length; indexArray++) {
 		const value = yield* parseValue(data);
 		if (!testEmptySlot(value)) {
