@@ -512,8 +512,13 @@ function* parseSymbols(data, value) {
 	data.setObject([symbols], symbols => symbols.forEach(([symbol, propertyValue]) => value[symbol] = propertyValue));
 }
 
-function* parseOwnProperties(data, value) {
-	yield* parseEntries(data, value);
+function* parseOwnProperties(data, object) {
+	const size = yield* parseValue(data);
+	for (let indexKey = 0; indexKey < size; indexKey++) {
+		const key = yield* parseString(data);
+		const value = yield* parseValue(data);
+		data.setObject([value], value => object[key] = value);
+	}
 }
 
 function* parseCircularReference(data) {
@@ -537,15 +542,6 @@ function* parseArray(data) {
 		}
 	}
 	return array;
-}
-
-function* parseEntries(data, object) {
-	const size = yield* parseValue(data);
-	for (let indexKey = 0; indexKey < size; indexKey++) {
-		const key = yield* parseString(data);
-		const value = yield* parseValue(data);
-		data.setObject([value], value => object[key] = value);
-	}
 }
 
 // eslint-disable-next-line require-yield
