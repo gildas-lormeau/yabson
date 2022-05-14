@@ -272,7 +272,11 @@ function* serializeOwnProperties(data, value) {
 	if (testArray(value)) {
 		entries = entries.filter(([key]) => !testInteger(Number(key)));
 	}
-	yield* serializeEntries(data, entries);
+	yield* serializeValue(data, entries.length);
+	for (const [key, value] of entries) {
+		yield* serializeString(data, key);
+		yield* serializeValue(data, value);
+	}
 }
 
 function* serializeCircularReference(data, value) {
@@ -291,14 +295,6 @@ function* serializeArray(data, array) {
 		} else {
 			yield* serializeValue(data, EMPTY_SLOT_VALUE);
 		}
-	}
-}
-
-function* serializeEntries(data, entries) {
-	yield* serializeValue(data, entries.length);
-	for (const [key, value] of entries) {
-		yield* serializeString(data, key);
-		yield* serializeValue(data, value);
 	}
 }
 
