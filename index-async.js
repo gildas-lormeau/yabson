@@ -260,7 +260,7 @@ function getSerializer(value, { chunkSize = DEFAULT_CHUNK_SIZE } = {}) {
 	};
 
 	async function getResult() {
-		if (previousResult) {
+		if (resolvePreviousResult) {
 			resolvePreviousResult();
 		} else {
 			initSerializerData();
