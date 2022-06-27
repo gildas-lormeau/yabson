@@ -40,7 +40,7 @@ Deno.test("Fuzzing tests should run without errors", () => {
 	}
 	return true;
 });
-Deno.test("Fuzzing tests should run without errors (Async API)", async () => {
+Deno.test("Fuzzing tests should run without errors (Async API)", () => {
 	return test();
 
 	async function test(indexTest = 0) {
