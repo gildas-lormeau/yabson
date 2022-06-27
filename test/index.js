@@ -1,6 +1,7 @@
 /* global Deno, BigUint64Array, BigInt64Array */
 
 import { getSerializer, clone } from "./../index.js";
+import { getSerializer as getSerializerAsync, clone as cloneAsync } from "./../index-async.js";
 
 const MAX_CHUNK_SIZE = 16 * 1024;
 const MAX_TESTS = 32;
@@ -39,6 +40,21 @@ Deno.test("Fuzzing tests should run without errors", () => {
 	}
 	return true;
 });
+Deno.test("Fuzzing tests should run without errors (Async API)", async () => {
+	return test();
+
+	async function test(indexTest = 0) {
+		if (await testAsync()) {
+			if (indexTest < MAX_TESTS) {
+				await test(indexTest + 1);
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	}
+});
 
 function test() {
 	const object = createObject();
@@ -56,6 +72,30 @@ function test() {
 		}
 	} while (!serializedObject.done && !serializedCopy.done);
 	return true;
+}
+
+async function testAsync() {
+	const object = createObject();
+	const copy = await cloneAsync(object);
+	const serializerObject = getSerializerAsync(object, { chunkSize: MAX_CHUNK_SIZE })[Symbol.asyncIterator]();
+	const serializerCopy = getSerializerAsync(copy, { chunkSize: MAX_CHUNK_SIZE })[Symbol.asyncIterator]();
+	let serializedObject, serializedCopy;
+	return test();
+
+	async function test() {
+		serializedObject = await serializerObject.next();
+		serializedCopy = await serializerCopy.next();
+		if (!serializedObject.done &&
+			!serializedCopy.done &&
+			JSON.stringify(Array.from(serializedObject.value)) != JSON.stringify(Array.from(serializedCopy.value))) {
+			return false;
+		}
+		if (!serializedObject.done && !serializedCopy.done) {
+			return test();
+		} else {
+			return true;
+		}
+	}
 }
 
 function createValue(depth = 0) {
