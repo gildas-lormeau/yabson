@@ -1,3 +1,5 @@
+// deno-lint-ignore-file ban-types no-explicit-any
+
 interface TypedArray {
     length: number;
     buffer: ArrayBuffer;
