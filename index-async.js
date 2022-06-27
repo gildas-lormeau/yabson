@@ -263,7 +263,7 @@ function getSerializer(value, { chunkSize = DEFAULT_CHUNK_SIZE } = {}) {
 		if (resolvePreviousResult) {
 			resolvePreviousResult();
 		} else {
-			initSerializerData();
+			initSerializerData().catch(() => { /* ignored */ });
 		}
 		initPreviousData();
 		const value = await getValue();
@@ -545,7 +545,7 @@ function getParser() {
 		if (previousData) {
 			await previousData;
 		} else {
-			initParserData();
+			initParserData().catch(() => { /* ignored */ });
 		}
 		initPreviousData();
 		setInput(input);
