@@ -79,12 +79,10 @@ async function testAsync() {
 	const copy = await cloneAsync(object);
 	const serializerObject = getSerializerAsync(object, { chunkSize: MAX_CHUNK_SIZE })[Symbol.asyncIterator]();
 	const serializerCopy = getSerializerAsync(copy, { chunkSize: MAX_CHUNK_SIZE })[Symbol.asyncIterator]();
-	let serializedObject, serializedCopy;
 	return test();
 
 	async function test() {
-		serializedObject = await serializerObject.next();
-		serializedCopy = await serializerCopy.next();
+		const [serializedObject, serializedCopy] = await Promise.all([serializerObject.next(), serializerCopy.next()]);
 		if (!serializedObject.done &&
 			!serializedCopy.done &&
 			JSON.stringify(Array.from(serializedObject.value)) != JSON.stringify(Array.from(serializedCopy.value))) {
