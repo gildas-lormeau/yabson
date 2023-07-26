@@ -1,7 +1,7 @@
 ## YaBSON
 
 YaBSON is a library allowing schemaless binary-encoded parsing/serialization of 
-JavaScript data with a generator-based parser/serializer 
+JavaScript data with a generator-based parser/serializer.
 
 This library is designed to transfer large arbitrary amounts of data into
 chunks. The main goal is to provide a very simple and easily extensible API and
