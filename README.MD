@@ -44,11 +44,11 @@ const object = {
   booleanObject: new Boolean(true),
   arrayBuffer: new Uint16Array([1, 2, 3]).buffer,
 };
-// creates empty slots in `object.array`
+// Create empty slots in `object.array`
 object.array[12] = 12;
-// adds a circular reference
+// Add a circular reference
 object.map.set(object.array, object);
-// adds a property to an object
+// Add a property to a native object
 object.numberObject.myProperty = "propertyValue";
 
 // `chunkSize` (optional) is the max. size in bytes of `chunk` in the for-of loop below
@@ -58,10 +58,10 @@ const parser = getParser();
 let result;
 // `chunk` is a Uint8Array of binary encoded data
 for (const chunk of serializer) {
-  // parses immediately binary data
+  // Parse immediately binary data
   result = parser.next(chunk);
 }
-// displays a deep clone of `object`
+// Display a deep clone of `object`
 console.log(result.value);
 ```
 
@@ -89,12 +89,12 @@ class CustomType {
 registerType(serializeCustomType, parseCustomType, testCustomType);
 
 function* serializeCustomType(data, customType) {
-  // delegates serialization to `serializeString` from yabson
+  // Delegate serialization to `serializeString` from yabson
   yield* serializeString(data, customType.name);
 }
 
 function* parseCustomType(data) {
-  // delegates parsing to `parseString` from yabson
+  // Delegate parsing to `parseString` from yabson
   const name = yield* parseString(data);
   return new CustomType(name);
 }
@@ -103,6 +103,7 @@ function testCustomType(value) {
   return value instanceof CustomType;
 }
 
+// Run test
 const array = [
   new CustomType("first"),
   new CustomType("second"),
@@ -115,7 +116,7 @@ let result;
 for (const chunk of serializer) {
   result = parser.next(chunk);
 }
-// displays a deep clone of `array`
+// Display a deep clone of `array`
 console.log(result.value);
 ```
 
