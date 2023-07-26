@@ -56,8 +56,8 @@ const serializer = getSerializer(object, { chunkSize: 16 });
 const parser = getParser();
 
 let result;
+// `chunk` is a Uint8Array of binary encoded data
 for (const chunk of serializer) {
-  // `chunk` is a Uint8array of binary encoded data
   // parses immediately binary data
   result = parser.next(chunk);
 }
