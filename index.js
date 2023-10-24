@@ -268,14 +268,18 @@ function* serializeSymbols(data, value) {
 }
 
 function* serializeOwnProperties(data, value) {
-	let entries = Object.entries(value);
-	if (testArray(value)) {
-		entries = entries.filter(([key]) => !testInteger(Number(key)));
-	}
-	yield* serializeValue(data, entries.length);
-	for (const [key, value] of entries) {
-		yield* serializeString(data, key);
-		yield* serializeValue(data, value);
+	if (ArrayBuffer.isView(value)) {
+		yield* serializeValue(data, 0);
+	} else {
+		let entries = Object.entries(value);
+		if (testArray(value)) {
+			entries = entries.filter(([key]) => !testInteger(Number(key)));
+		}
+		yield* serializeValue(data, entries.length);
+		for (const [key, value] of entries) {
+			yield* serializeString(data, key);
+			yield* serializeValue(data, value);
+		}
 	}
 }
 
